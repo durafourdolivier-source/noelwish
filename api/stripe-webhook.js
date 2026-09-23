@@ -72,7 +72,10 @@ async function sendEmail({ to, subject, html, eventId, scheduledAt }) {
 function futureDeliveryDate(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return undefined;
   const date = new Date(`${value}T09:00:00Z`);
-  return date.getTime() > Date.now() + 10 * 60 * 1000 ? date.toISOString() : undefined;
+  const delay = date.getTime() - Date.now();
+  return delay > 10 * 60 * 1000 && delay <= 30 * 24 * 60 * 60 * 1000
+    ? date.toISOString()
+    : undefined;
 }
 
 export default async function handler(req, res) {
