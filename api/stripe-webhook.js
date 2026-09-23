@@ -45,7 +45,7 @@ function letterHtml(metadata) {
 function confirmationHtml(metadata, product) {
   const recipient = escapeHtml(metadata.recipient || 'le destinataire');
   const productName = product === 'santa-surprise' ? 'Santa Surprise' : 'Big Christmas Box';
-  return `<!doctype html><html lang="fr"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border-radius:20px;padding:34px"><h1 style="color:#7b0d1b">Commande confirmée 🎄</h1><p>Merci ! Le paiement de ta <strong>${productName}</strong> pour <strong>${recipient}</strong> a bien été reçu.</p><p>Notre atelier prépare maintenant la surprise. Nous te recontacterons à cette adresse pour le suivi de la commande.</p><p>L’équipe NoelWish ✨</p></div></body></html>`;
+  return `<!doctype html><html lang="fr"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border-radius:20px;padding:34px"><h1 style="color:#7b0d1b">Commande confirmée 🎄</h1><p>Merci ! Le paiement de ta <strong>${productName}</strong> pour <strong>${recipient}</strong> a bien été reçu.</p><p>Notre atelier prépare maintenant la surprise. Tu recevras directement les informations utiles à cette adresse.</p><p>L’équipe NoelWish ✨</p></div></body></html>`;
 }
 
 async function sendEmail({ to, subject, html, eventId, scheduledAt }) {
@@ -70,8 +70,8 @@ async function sendEmail({ to, subject, html, eventId, scheduledAt }) {
 }
 
 function futureDeliveryDate(value) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return undefined;
-  const date = new Date(`${value}T09:00:00Z`);
+  const date = new Date(value || '');
+  if (!date.getTime()) return undefined;
   const delay = date.getTime() - Date.now();
   return delay > 10 * 60 * 1000 && delay <= 30 * 24 * 60 * 60 * 1000
     ? date.toISOString()
@@ -107,7 +107,7 @@ export default async function handler(req, res) {
         subject: `Une lettre magique pour ${metadata.recipient || 'toi'} 🎅`,
         html: letterHtml(metadata),
         eventId: event.id,
-        scheduledAt: futureDeliveryDate(metadata.delivery_date)
+        scheduledAt: metadata.delivery_mode === 'scheduled' ? futureDeliveryDate(metadata.delivery_at) : undefined
       });
     } else if (purchaserEmail && ['santa-surprise', 'big-christmas-box'].includes(product)) {
       await sendEmail({
