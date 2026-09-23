@@ -46,6 +46,10 @@ module.exports = async function handler(req, res) {
     sender: details.sender,
     theme: details.choice,
     delivery_date: details.date,
+    delivery_time: details.time,
+    delivery_at: details.deliveryAt,
+    delivery_mode: details.deliveryMode,
+    delivery_timezone: details.timezone,
     message: details.message
   };
   Object.entries(metadata).forEach(([key, value]) => {
