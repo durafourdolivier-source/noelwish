@@ -45,7 +45,8 @@ module.exports = async function handler(req, res) {
     delivery_email: details.email,
     sender: details.sender,
     theme: details.choice,
-    delivery_date: details.date
+    delivery_date: details.date,
+    message: details.message
   };
   Object.entries(metadata).forEach(([key, value]) => {
     if (value) params.set(`metadata[${key}]`, String(value).slice(0, 450));
