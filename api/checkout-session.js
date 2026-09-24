@@ -38,7 +38,9 @@ module.exports = async function handler(req, res) {
       deliveryEmail: maskEmail(deliveryEmail),
       deliveryMode: metadata.delivery_mode || 'immediate',
       deliveryAt: metadata.delivery_at || '',
-      deliveryTimezone: metadata.delivery_timezone || ''
+      deliveryTimezone: metadata.delivery_timezone || '',
+      amount: session.amount_total || 0,
+      currency: session.currency || 'eur'
     });
   } catch {
     return res.status(502).json({ error: 'Unable to reach Stripe' });
