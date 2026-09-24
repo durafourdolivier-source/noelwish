@@ -42,7 +42,7 @@ const EMAIL_LOCALES = { fr: 'fr-FR', en: 'en-GB', es: 'es-ES', pt: 'pt-PT', de: 
 const EMAIL_COPY = {
   fr: {
     friend: 'mon ami', defaultMessage: 'Je te souhaite un merveilleux Noël.',
-    preview: 'Une lettre du Père Noël est arrivée pour', imageAlt: 'Le Père Noël signe ta lettre dans son atelier',
+    preview: 'Une lettre du Père Noël est arrivée pour', imageAlt: 'Le Père Noël signe ta lettre dans son atelier', giftImageAlt: 'Le Père Noël prépare un cadeau dans son atelier',
     overline: 'Courrier du Pôle Nord', title: 'Une lettre pour', northPole: 'Pôle Nord, le',
     introSelf: 'J’ai trouvé dans mon courrier quelques mots qui t’étaient spécialement destinés…',
     introSender: sender => `${sender} m’a confié quelques mots rien que pour toi…`,
@@ -64,7 +64,7 @@ const EMAIL_COPY = {
   },
   en: {
     friend: 'my friend', defaultMessage: 'Wishing you a wonderful Christmas.',
-    preview: 'A letter from Santa has arrived for', imageAlt: 'Santa signs your letter in his workshop',
+    preview: 'A letter from Santa has arrived for', imageAlt: 'Santa signs your letter in his workshop', giftImageAlt: 'Santa prepares a gift in his workshop',
     overline: 'Mail from the North Pole', title: 'A letter for', northPole: 'North Pole,',
     introSelf: 'I found a few words in my mail that were meant especially for you…',
     introSender: sender => `${sender} shared a few words just for you…`,
@@ -86,7 +86,7 @@ const EMAIL_COPY = {
   },
   es: {
     friend: 'mi amigo', defaultMessage: 'Te deseo una Navidad maravillosa.',
-    preview: 'Ha llegado una carta de Papá Noel para', imageAlt: 'Papá Noel firma tu carta en su taller',
+    preview: 'Ha llegado una carta de Papá Noel para', imageAlt: 'Papá Noel firma tu carta en su taller', giftImageAlt: 'Papá Noel prepara un regalo en su taller',
     overline: 'Correo del Polo Norte', title: 'Una carta para', northPole: 'Polo Norte,',
     introSelf: 'He encontrado en mi correo unas palabras especialmente destinadas a ti…',
     introSender: sender => `${sender} me confió unas palabras solo para ti…`,
@@ -108,7 +108,7 @@ const EMAIL_COPY = {
   },
   pt: {
     friend: 'meu amigo', defaultMessage: 'Desejo a você um Natal maravilhoso.',
-    preview: 'Chegou uma carta do Pai Natal para', imageAlt: 'O Pai Natal assina a sua carta na oficina',
+    preview: 'Chegou uma carta do Pai Natal para', imageAlt: 'O Pai Natal assina a sua carta na oficina', giftImageAlt: 'O Pai Natal prepara um presente na sua oficina',
     overline: 'Correio do Polo Norte', title: 'Uma carta para', northPole: 'Polo Norte,',
     introSelf: 'Encontrei no meu correio algumas palavras destinadas especialmente a você…',
     introSender: sender => `${sender} me confiou algumas palavras só para você…`,
@@ -130,7 +130,7 @@ const EMAIL_COPY = {
   },
   de: {
     friend: 'mein lieber Freund', defaultMessage: 'Ich wünsche dir ein wundervolles Weihnachtsfest.',
-    preview: 'Ein Brief vom Weihnachtsmann ist angekommen für', imageAlt: 'Der Weihnachtsmann unterschreibt deinen Brief in seiner Werkstatt',
+    preview: 'Ein Brief vom Weihnachtsmann ist angekommen für', imageAlt: 'Der Weihnachtsmann unterschreibt deinen Brief in seiner Werkstatt', giftImageAlt: 'Der Weihnachtsmann bereitet ein Geschenk in seiner Werkstatt vor',
     overline: 'Post vom Nordpol', title: 'Ein Brief für', northPole: 'Nordpol,',
     introSelf: 'In meiner Post habe ich ein paar Worte gefunden, die ganz besonders für dich bestimmt waren…',
     introSender: sender => `${sender} hat mir ein paar Worte nur für dich anvertraut…`,
@@ -261,7 +261,7 @@ function confirmationHtml(metadata, product, language) {
   const copy = EMAIL_COPY[language];
   const recipient = escapeHtml(metadata.recipient || copy.recipientFallback);
   const productName = product === 'santa-surprise' ? 'Santa Surprise' : 'Big Christmas Box';
-  return `<!doctype html><html lang="${language}"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border-radius:20px;padding:34px"><h1 style="color:#7b0d1b">${copy.confirmationTitle}</h1><p>${copy.confirmationLead(productName, recipient)}</p><p>${copy.confirmationNext}</p><p>${copy.team}</p></div></body></html>`;
+  return `<!doctype html><html lang="${language}"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="display:none;max-height:0;overflow:hidden">${copy.confirmationTitle}</div><table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr><td align="center" style="padding:24px 10px"><table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:600px;background:#fffaf3;border:1px solid #ead6b6;border-radius:20px;overflow:hidden"><tr><td><img src="https://www.noelwish.com/api/gift-workshop-image" width="600" alt="${copy.giftImageAlt}" style="display:block;width:100%;max-width:600px;height:auto;border:0"></td></tr><tr><td style="padding:34px;font-size:16px;line-height:1.65"><h1 style="margin:0 0 22px;color:#7b0d1b;font-family:Georgia,'Times New Roman',serif;font-size:29px">${copy.confirmationTitle}</h1><p style="margin:0 0 18px">${copy.confirmationLead(productName, recipient)}</p><p style="margin:0 0 24px">${copy.confirmationNext}</p><p style="margin:0;color:#7b0d1b;font-weight:bold">${copy.team}</p></td></tr></table></td></tr></table></body></html>`;
 }
 
 function donationHtml(session, language) {
