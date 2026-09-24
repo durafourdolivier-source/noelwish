@@ -159,6 +159,11 @@ function confirmationHtml(metadata, product) {
   return `<!doctype html><html lang="fr"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border-radius:20px;padding:34px"><h1 style="color:#7b0d1b">Commande confirmée 🎄</h1><p>Merci ! Le paiement de ta <strong>${productName}</strong> pour <strong>${recipient}</strong> a bien été reçu.</p><p>Notre atelier prépare maintenant la surprise. Tu recevras directement les informations utiles à cette adresse.</p><p>L’équipe NoelWish ✨</p></div></body></html>`;
 }
 
+function donationHtml(session) {
+  const amount = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: String(session.currency || 'eur').toUpperCase() }).format((session.amount_total || 0) / 100);
+  return `<!doctype html><html lang="fr"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border-radius:20px;padding:34px"><p style="color:#a86e2a;letter-spacing:2px;font-size:12px">NOELWISH · PROJET SOLIDAIRE</p><h1 style="color:#7b0d1b">Merci pour ton geste ❤️</h1><p>Ta contribution de <strong>${amount}</strong> est bien confirmée.</p><p>Elle aidera NoelWish à acheter et préparer des cadeaux solidaires. Nous publierons un bilan transparent des sommes collectées et de leur utilisation.</p><p style="font-size:13px;color:#765">Cette contribution ne donne pas droit à un reçu fiscal.</p><p>L’équipe NoelWish ✨</p></div></body></html>`;
+}
+
 async function sendEmail({ to, subject, html, text, eventId, scheduledAt }) {
   const payload = {
     from: 'Le Père Noël <magic@noelwish.com>',
@@ -227,6 +232,14 @@ export default async function handler(req, res) {
         to: purchaserEmail,
         subject: 'Ta commande NoelWish est confirmée 🎄',
         html: confirmationHtml(metadata, product),
+        eventId: event.id
+      });
+    } else if (purchaserEmail && String(product || '').startsWith('donation-')) {
+      await sendEmail({
+        to: purchaserEmail,
+        subject: 'Merci pour ton geste solidaire ❤️',
+        html: donationHtml(session),
+        text: 'Merci pour ta contribution au projet solidaire NoelWish. Un bilan transparent des sommes collectées et utilisées sera publié. Cette contribution ne donne pas droit à un reçu fiscal.',
         eventId: event.id
       });
     }
