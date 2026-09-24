@@ -114,7 +114,8 @@ module.exports = async function handler(req, res) {
         shippingAddress: shipping.address || null,
         tracking: metadata.tracking_number || '',
         note: metadata.admin_note || '',
-        paymentIntent: session.payment_intent || ''
+        paymentIntent: session.payment_intent || '',
+        livemode: Boolean(session.livemode)
       };
     });
     return res.status(200).json({ orders, hasMore: Boolean(payload.has_more) });
