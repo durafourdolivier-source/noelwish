@@ -16,6 +16,30 @@ const PRODUCTS = {
     description: 'Grande sélection de surprises de Noël personnalisées.',
     amount: 6900,
     physical: true
+  },
+  'donation-10': {
+    name: 'Petite étincelle solidaire',
+    description: 'Contribution de 10 € au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
+    amount: 1000,
+    physical: false
+  },
+  'donation-25': {
+    name: 'Un sourire solidaire',
+    description: 'Contribution de 25 € au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
+    amount: 2500,
+    physical: false
+  },
+  'donation-50': {
+    name: 'Plus de joie',
+    description: 'Contribution de 50 € au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
+    amount: 5000,
+    physical: false
+  },
+  'donation-100': {
+    name: 'Grand cœur',
+    description: 'Contribution de 100 € au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
+    amount: 10000,
+    physical: false
   }
 };
 
@@ -50,7 +74,10 @@ module.exports = async function handler(req, res) {
     delivery_at: details.deliveryAt,
     delivery_mode: details.deliveryMode,
     delivery_timezone: details.timezone,
-    message: details.message
+    message: details.message,
+    age: details.age,
+    preferences: details.preferences,
+    avoid: details.avoid
   };
   Object.entries(metadata).forEach(([key, value]) => {
     if (value) params.set(`metadata[${key}]`, String(value).slice(0, 450));
