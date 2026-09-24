@@ -33,13 +33,81 @@ function escapeHtml(value = '') {
   }[char]));
 }
 
+function isSelfSender(value = '') {
+  return /^(moi([ -]?même)?|me|myself)$/i.test(String(value).trim());
+}
+
 function letterHtml(metadata) {
   const recipient = escapeHtml(metadata.recipient || 'mon ami');
-  const sender = escapeHtml(metadata.sender || 'une personne qui pense à toi');
+  const rawSender = metadata.sender || '';
+  const senderLine = rawSender && !isSelfSender(rawSender)
+    ? `Cette lettre a été préparée avec beaucoup d’attention par <strong>${escapeHtml(rawSender)}</strong>, qui tenait à t’offrir un moment rien qu’à toi.`
+    : 'Cette lettre a été préparée spécialement pour toi, avec beaucoup d’attention.';
   const message = escapeHtml(metadata.message || 'Je te souhaite un merveilleux Noël.');
-  const theme = escapeHtml(metadata.theme || 'Magique et émouvant');
 
-  return `<!doctype html><html lang="fr"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="display:none;max-height:0;overflow:hidden">Une lettre magique t'attend au Pôle Nord ✨</div><table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 14px"><table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fffaf3;border:1px solid #ead6b6;border-radius:22px"><tr><td align="center" style="padding:36px 34px 18px;background:#7b0d1b;border-radius:22px 22px 0 0;color:#f6d37b"><div style="font-size:42px">🎅</div><div style="font-size:12px;letter-spacing:3px">NOELWISH · PÔLE NORD</div><h1 style="margin:12px 0 0;font-family:Georgia,serif;color:white">Une lettre pour ${recipient}</h1></td></tr><tr><td style="padding:34px;font-size:17px;line-height:1.75"><p>Ho ho ho, ${recipient} !</p><p>Une pensée remplie de magie vient de traverser les étoiles jusqu’à mon atelier.</p><p style="padding:20px;border-left:4px solid #c89b3c;background:#fff4dc;font-family:Georgia,serif;font-size:19px"><em>« ${message} »</em></p><p>Cette surprise t’est offerte par <strong>${sender}</strong>, avec un esprit <strong>${theme.toLowerCase()}</strong>.</p><p>Que ton Noël soit rempli de douceur, de rires et de merveilleux souvenirs.</p><p>Avec toute la magie du Pôle Nord,<br><strong>Le Père Noël 🎅</strong></p></td></tr><tr><td align="center" style="padding:20px;color:#8d6e62;font-size:12px;border-top:1px solid #ead6b6">NoelWish · Une surprise envoyée avec amour</td></tr></table></td></tr></table></body></html>`;
+  return `<!doctype html>
+<html lang="fr">
+  <body style="margin:0;background:#f6f1e8;font-family:Georgia,'Times New Roman',serif;color:#38251f">
+    <div style="display:none;max-height:0;overflow:hidden">Un courrier du Pôle Nord est arrivé pour ${recipient}.</div>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      <tr>
+        <td align="center" style="padding:28px 12px">
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:590px;background:#fffdf8;border:1px solid #dfcfb6;border-radius:14px">
+            <tr>
+              <td style="padding:42px 42px 12px;text-align:center">
+                <div style="font-size:11px;letter-spacing:3px;color:#9a6b38;text-transform:uppercase">Courrier du Pôle Nord</div>
+                <h1 style="margin:14px 0 4px;font-size:29px;line-height:1.25;color:#741421;font-weight:normal">Une lettre pour ${recipient}</h1>
+                <div style="width:58px;height:1px;background:#c8a566;margin:22px auto 0"></div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:18px 42px 38px;font-size:17px;line-height:1.75">
+                <p style="margin:0 0 20px">Ho ho ho, ${recipient} !</p>
+                <p style="margin:0 0 20px">Une pensée remplie de magie vient de traverser les étoiles pour arriver jusqu’à mon atelier.</p>
+                <p style="margin:26px 0;padding:20px 22px;border-left:3px solid #b88a3b;background:#fff8e9;font-size:19px;line-height:1.65"><em>« ${message} »</em></p>
+                <p style="margin:0 0 20px">${senderLine}</p>
+                <p style="margin:0 0 20px">Garde précieusement ces mots : ils ont voyagé jusqu’ici parce que quelqu’un voulait rendre ton Noël encore un peu plus spécial.</p>
+                <p style="margin:0 0 30px">Je te souhaite de belles fêtes, pleines de douceur, de rires et de merveilleux souvenirs auprès de ceux qui comptent pour toi.</p>
+                <p style="margin:0">Avec toute la magie du Pôle Nord,</p>
+                <p style="margin:8px 0 0;font-family:'Brush Script MT','Segoe Script',cursive;font-size:27px;color:#741421">Le Père Noël</p>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding:16px 24px;color:#9a8173;font:11px Arial,sans-serif;border-top:1px solid #eee2d1">Une attention personnelle envoyée depuis le Pôle Nord</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+function letterText(metadata) {
+  const recipient = metadata.recipient || 'mon ami';
+  const rawSender = String(metadata.sender || '').trim();
+  const message = metadata.message || 'Je te souhaite un merveilleux Noël.';
+  const senderLine = rawSender && !isSelfSender(rawSender)
+    ? `Cette lettre a été préparée avec beaucoup d’attention par ${rawSender}, qui tenait à t’offrir un moment rien qu’à toi.`
+    : 'Cette lettre a été préparée spécialement pour toi, avec beaucoup d’attention.';
+
+  return `Une lettre pour ${recipient}
+
+Ho ho ho, ${recipient} !
+
+Une pensée remplie de magie vient de traverser les étoiles pour arriver jusqu’à mon atelier.
+
+« ${message} »
+
+${senderLine}
+
+Garde précieusement ces mots : ils ont voyagé jusqu’ici parce que quelqu’un voulait rendre ton Noël encore un peu plus spécial.
+
+Je te souhaite de belles fêtes, pleines de douceur, de rires et de merveilleux souvenirs auprès de ceux qui comptent pour toi.
+
+Avec toute la magie du Pôle Nord,
+
+Le Père Noël`;
 }
 
 function confirmationHtml(metadata, product) {
@@ -48,12 +116,13 @@ function confirmationHtml(metadata, product) {
   return `<!doctype html><html lang="fr"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border-radius:20px;padding:34px"><h1 style="color:#7b0d1b">Commande confirmée 🎄</h1><p>Merci ! Le paiement de ta <strong>${productName}</strong> pour <strong>${recipient}</strong> a bien été reçu.</p><p>Notre atelier prépare maintenant la surprise. Tu recevras directement les informations utiles à cette adresse.</p><p>L’équipe NoelWish ✨</p></div></body></html>`;
 }
 
-async function sendEmail({ to, subject, html, eventId, scheduledAt }) {
+async function sendEmail({ to, subject, html, text, eventId, scheduledAt }) {
   const payload = {
-    from: 'Père Noël · NoelWish <magic@noelwish.com>',
+    from: 'Le Père Noël <magic@noelwish.com>',
     to: [to],
     subject,
-    html
+    html,
+    text
   };
   if (scheduledAt) payload.scheduled_at = scheduledAt;
 
@@ -104,8 +173,9 @@ export default async function handler(req, res) {
     if (product === 'magic-letter' && recipientEmail) {
       await sendEmail({
         to: recipientEmail,
-        subject: `Une lettre magique pour ${metadata.recipient || 'toi'} 🎅`,
+        subject: `Une lettre du Père Noël pour ${metadata.recipient || 'toi'}`,
         html: letterHtml(metadata),
+        text: letterText(metadata),
         eventId: event.id,
         scheduledAt: metadata.delivery_mode === 'scheduled' ? futureDeliveryDate(metadata.delivery_at) : undefined
       });
