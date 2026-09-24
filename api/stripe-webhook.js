@@ -45,18 +45,18 @@ const EMAIL_COPY = {
     preview: 'Une lettre du Père Noël est arrivée pour', imageAlt: 'Le Père Noël signe ta lettre dans son atelier',
     overline: 'Courrier du Pôle Nord', title: 'Une lettre pour', northPole: 'Pôle Nord, le',
     introSelf: 'J’ai trouvé dans mon courrier quelques mots qui t’étaient spécialement destinés…',
-    introSender: sender => \`\${sender} m’a confié quelques mots rien que pour toi…\`,
+    introSender: sender => `${sender} m’a confié quelques mots rien que pour toi…`,
     journey: 'Certaines pensées n’ont besoin que de quelques mots pour voyager loin. Celle-ci a trouvé son chemin jusqu’à toi.',
     wishes: 'Je te souhaite de belles fêtes, pleines de douceur, de rires et de précieux moments auprès de ceux qui comptent pour toi.',
     closing: 'Avec toute mon affection,', santa: 'Le Père Noël', seal: 'PN',
     reply: 'Répondre au Père Noël →', footer: 'Courrier personnel préparé dans l’atelier du Père Noël',
-    letterSubject: recipient => \`Une lettre du Père Noël pour \${recipient}\`,
+    letterSubject: recipient => `Une lettre du Père Noël pour ${recipient}`,
     confirmationSubject: 'Ta commande NoelWish est confirmée 🎄', confirmationTitle: 'Commande confirmée 🎄',
     recipientFallback: 'le destinataire',
-    confirmationLead: (product, recipient) => \`Merci ! Le paiement de ta <strong>\${product}</strong> pour <strong>\${recipient}</strong> a bien été reçu.\`,
+    confirmationLead: (product, recipient) => `Merci ! Le paiement de ta <strong>${product}</strong> pour <strong>${recipient}</strong> a bien été reçu.`,
     confirmationNext: 'Notre atelier prépare maintenant la surprise. Tu recevras directement les informations utiles à cette adresse.',
     donationSubject: 'Merci pour ton geste solidaire ❤️', donationLabel: 'NOELWISH · PROJET SOLIDAIRE',
-    donationTitle: 'Merci pour ton geste ❤️', donationConfirmed: amount => \`Ta contribution de <strong>\${amount}</strong> est bien confirmée.\`,
+    donationTitle: 'Merci pour ton geste ❤️', donationConfirmed: amount => `Ta contribution de <strong>${amount}</strong> est bien confirmée.`,
     donationHelp: 'Elle aidera NoelWish à acheter et préparer des cadeaux solidaires. Nous publierons un bilan transparent des sommes collectées et de leur utilisation.',
     donationReceipt: 'Cette contribution ne donne pas droit à un reçu fiscal.',
     donationText: 'Merci pour ta contribution au projet solidaire NoelWish. Un bilan transparent des sommes collectées et utilisées sera publié. Cette contribution ne donne pas droit à un reçu fiscal.',
@@ -67,18 +67,18 @@ const EMAIL_COPY = {
     preview: 'A letter from Santa has arrived for', imageAlt: 'Santa signs your letter in his workshop',
     overline: 'Mail from the North Pole', title: 'A letter for', northPole: 'North Pole,',
     introSelf: 'I found a few words in my mail that were meant especially for you…',
-    introSender: sender => \`\${sender} shared a few words just for you…\`,
+    introSender: sender => `${sender} shared a few words just for you…`,
     journey: 'Some thoughts need only a few words to travel a long way. This one has found its way to you.',
     wishes: 'I wish you a wonderful festive season filled with warmth, laughter and precious moments with those who matter to you.',
     closing: 'With all my affection,', santa: 'Santa Claus', seal: 'SC',
     reply: 'Reply to Santa →', footer: 'A personal letter prepared in Santa’s workshop',
-    letterSubject: recipient => \`A letter from Santa for \${recipient}\`,
+    letterSubject: recipient => `A letter from Santa for ${recipient}`,
     confirmationSubject: 'Your NoelWish order is confirmed 🎄', confirmationTitle: 'Order confirmed 🎄',
     recipientFallback: 'the recipient',
-    confirmationLead: (product, recipient) => \`Thank you! Payment for your <strong>\${product}</strong> for <strong>\${recipient}</strong> has been received.\`,
+    confirmationLead: (product, recipient) => `Thank you! Payment for your <strong>${product}</strong> for <strong>${recipient}</strong> has been received.`,
     confirmationNext: 'Our workshop is now preparing the surprise. We will send all useful information directly to this email address.',
     donationSubject: 'Thank you for your generous gesture ❤️', donationLabel: 'NOELWISH · SOLIDARITY PROJECT',
-    donationTitle: 'Thank you for your kindness ❤️', donationConfirmed: amount => \`Your contribution of <strong>\${amount}</strong> is confirmed.\`,
+    donationTitle: 'Thank you for your kindness ❤️', donationConfirmed: amount => `Your contribution of <strong>${amount}</strong> is confirmed.`,
     donationHelp: 'It will help NoelWish purchase and prepare solidarity gifts. We will publish a transparent report on the funds collected and how they are used.',
     donationReceipt: 'This contribution is not eligible for a tax receipt.',
     donationText: 'Thank you for contributing to the NoelWish solidarity project. We will publish a transparent report on the funds collected and how they are used. This contribution is not eligible for a tax receipt.',
@@ -89,18 +89,18 @@ const EMAIL_COPY = {
     preview: 'Ha llegado una carta de Papá Noel para', imageAlt: 'Papá Noel firma tu carta en su taller',
     overline: 'Correo del Polo Norte', title: 'Una carta para', northPole: 'Polo Norte,',
     introSelf: 'He encontrado en mi correo unas palabras especialmente destinadas a ti…',
-    introSender: sender => \`\${sender} me confió unas palabras solo para ti…\`,
+    introSender: sender => `${sender} me confió unas palabras solo para ti…`,
     journey: 'Algunos pensamientos solo necesitan unas palabras para viajar muy lejos. Este ha encontrado el camino hasta ti.',
     wishes: 'Te deseo unas fiestas llenas de cariño, risas y momentos preciosos junto a las personas que más quieres.',
     closing: 'Con todo mi cariño,', santa: 'Papá Noel', seal: 'PN',
     reply: 'Responder a Papá Noel →', footer: 'Carta personal preparada en el taller de Papá Noel',
-    letterSubject: recipient => \`Una carta de Papá Noel para \${recipient}\`,
+    letterSubject: recipient => `Una carta de Papá Noel para ${recipient}`,
     confirmationSubject: 'Tu pedido NoelWish está confirmado 🎄', confirmationTitle: 'Pedido confirmado 🎄',
     recipientFallback: 'el destinatario',
-    confirmationLead: (product, recipient) => \`¡Gracias! Hemos recibido el pago de tu <strong>\${product}</strong> para <strong>\${recipient}</strong>.\`,
+    confirmationLead: (product, recipient) => `¡Gracias! Hemos recibido el pago de tu <strong>${product}</strong> para <strong>${recipient}</strong>.`,
     confirmationNext: 'Nuestro taller ya está preparando la sorpresa. Recibirás toda la información necesaria directamente en este correo.',
     donationSubject: 'Gracias por tu gesto solidario ❤️', donationLabel: 'NOELWISH · PROYECTO SOLIDARIO',
-    donationTitle: 'Gracias por tu generosidad ❤️', donationConfirmed: amount => \`Tu contribución de <strong>\${amount}</strong> está confirmada.\`,
+    donationTitle: 'Gracias por tu generosidad ❤️', donationConfirmed: amount => `Tu contribución de <strong>${amount}</strong> está confirmada.`,
     donationHelp: 'Ayudará a NoelWish a comprar y preparar regalos solidarios. Publicaremos un informe transparente sobre los fondos recaudados y su utilización.',
     donationReceipt: 'Esta contribución no da derecho a un recibo fiscal.',
     donationText: 'Gracias por contribuir al proyecto solidario NoelWish. Publicaremos un informe transparente sobre los fondos recaudados y su utilización. Esta contribución no da derecho a un recibo fiscal.',
@@ -111,18 +111,18 @@ const EMAIL_COPY = {
     preview: 'Chegou uma carta do Pai Natal para', imageAlt: 'O Pai Natal assina a sua carta na oficina',
     overline: 'Correio do Polo Norte', title: 'Uma carta para', northPole: 'Polo Norte,',
     introSelf: 'Encontrei no meu correio algumas palavras destinadas especialmente a você…',
-    introSender: sender => \`\${sender} me confiou algumas palavras só para você…\`,
+    introSender: sender => `${sender} me confiou algumas palavras só para você…`,
     journey: 'Alguns pensamentos precisam apenas de poucas palavras para viajar longe. Este encontrou o caminho até você.',
     wishes: 'Desejo a você festas cheias de carinho, risadas e momentos preciosos ao lado de quem é importante.',
     closing: 'Com todo o meu carinho,', santa: 'Pai Natal', seal: 'PN',
     reply: 'Responder ao Pai Natal →', footer: 'Carta pessoal preparada na oficina do Pai Natal',
-    letterSubject: recipient => \`Uma carta do Pai Natal para \${recipient}\`,
+    letterSubject: recipient => `Uma carta do Pai Natal para ${recipient}`,
     confirmationSubject: 'O seu pedido NoelWish está confirmado 🎄', confirmationTitle: 'Pedido confirmado 🎄',
     recipientFallback: 'o destinatário',
-    confirmationLead: (product, recipient) => \`Obrigado! O pagamento da sua <strong>\${product}</strong> para <strong>\${recipient}</strong> foi recebido.\`,
+    confirmationLead: (product, recipient) => `Obrigado! O pagamento da sua <strong>${product}</strong> para <strong>${recipient}</strong> foi recebido.`,
     confirmationNext: 'A nossa oficina está preparando a surpresa. Todas as informações úteis serão enviadas diretamente para este e-mail.',
     donationSubject: 'Obrigado pelo seu gesto solidário ❤️', donationLabel: 'NOELWISH · PROJETO SOLIDÁRIO',
-    donationTitle: 'Obrigado pela sua generosidade ❤️', donationConfirmed: amount => \`A sua contribuição de <strong>\${amount}</strong> está confirmada.\`,
+    donationTitle: 'Obrigado pela sua generosidade ❤️', donationConfirmed: amount => `A sua contribuição de <strong>${amount}</strong> está confirmada.`,
     donationHelp: 'Ela ajudará a NoelWish a comprar e preparar presentes solidários. Publicaremos um relatório transparente sobre os valores arrecadados e a sua utilização.',
     donationReceipt: 'Esta contribuição não dá direito a recibo fiscal.',
     donationText: 'Obrigado por contribuir para o projeto solidário NoelWish. Publicaremos um relatório transparente sobre os valores arrecadados e a sua utilização. Esta contribuição não dá direito a recibo fiscal.',
@@ -133,18 +133,18 @@ const EMAIL_COPY = {
     preview: 'Ein Brief vom Weihnachtsmann ist angekommen für', imageAlt: 'Der Weihnachtsmann unterschreibt deinen Brief in seiner Werkstatt',
     overline: 'Post vom Nordpol', title: 'Ein Brief für', northPole: 'Nordpol,',
     introSelf: 'In meiner Post habe ich ein paar Worte gefunden, die ganz besonders für dich bestimmt waren…',
-    introSender: sender => \`\${sender} hat mir ein paar Worte nur für dich anvertraut…\`,
+    introSender: sender => `${sender} hat mir ein paar Worte nur für dich anvertraut…`,
     journey: 'Manche Gedanken brauchen nur wenige Worte, um weit zu reisen. Dieser hat seinen Weg zu dir gefunden.',
     wishes: 'Ich wünsche dir eine wunderschöne Weihnachtszeit voller Wärme, Lachen und wertvoller Momente mit den Menschen, die dir wichtig sind.',
     closing: 'Mit all meiner Zuneigung,', santa: 'Der Weihnachtsmann', seal: 'WM',
     reply: 'Dem Weihnachtsmann antworten →', footer: 'Persönlicher Brief aus der Werkstatt des Weihnachtsmanns',
-    letterSubject: recipient => \`Ein Brief vom Weihnachtsmann für \${recipient}\`,
+    letterSubject: recipient => `Ein Brief vom Weihnachtsmann für ${recipient}`,
     confirmationSubject: 'Deine NoelWish-Bestellung ist bestätigt 🎄', confirmationTitle: 'Bestellung bestätigt 🎄',
     recipientFallback: 'die beschenkte Person',
-    confirmationLead: (product, recipient) => \`Vielen Dank! Die Zahlung für deine <strong>\${product}</strong> für <strong>\${recipient}</strong> ist eingegangen.\`,
+    confirmationLead: (product, recipient) => `Vielen Dank! Die Zahlung für deine <strong>${product}</strong> für <strong>${recipient}</strong> ist eingegangen.`,
     confirmationNext: 'Unsere Werkstatt bereitet die Überraschung jetzt vor. Alle wichtigen Informationen erhältst du direkt an diese E-Mail-Adresse.',
     donationSubject: 'Danke für deine solidarische Geste ❤️', donationLabel: 'NOELWISH · SOLIDARITÄTSPROJEKT',
-    donationTitle: 'Danke für deine Unterstützung ❤️', donationConfirmed: amount => \`Dein Beitrag von <strong>\${amount}</strong> ist bestätigt.\`,
+    donationTitle: 'Danke für deine Unterstützung ❤️', donationConfirmed: amount => `Dein Beitrag von <strong>${amount}</strong> ist bestätigt.`,
     donationHelp: 'Damit hilft NoelWish, solidarische Geschenke zu kaufen und vorzubereiten. Wir veröffentlichen einen transparenten Bericht über die gesammelten Mittel und ihre Verwendung.',
     donationReceipt: 'Für diesen Beitrag kann keine Spendenbescheinigung ausgestellt werden.',
     donationText: 'Vielen Dank für deinen Beitrag zum NoelWish-Solidaritätsprojekt. Wir veröffentlichen einen transparenten Bericht über die gesammelten Mittel und ihre Verwendung. Für diesen Beitrag kann keine Spendenbescheinigung ausgestellt werden.',
@@ -194,80 +194,80 @@ function letterData(metadata, language) {
 function letterHtml(metadata, language) {
   const { copy, recipient, rawSender, sender, message, date } = letterData(metadata, language);
   const introduction = rawSender && !isSelfSender(rawSender)
-    ? copy.introSender(\`<strong>\${sender}</strong>\`)
+    ? copy.introSender(`<strong>${sender}</strong>`)
     : copy.introSelf;
 
-  return \`<!doctype html>
-<html lang="\${language}">
+  return `<!doctype html>
+<html lang="${language}">
   <body style="margin:0;background:#f4efe6;font-family:Georgia,'Times New Roman',serif;color:#38251f">
-    <div style="display:none;max-height:0;overflow:hidden">\${copy.preview} \${recipient}.</div>
+    <div style="display:none;max-height:0;overflow:hidden">${copy.preview} ${recipient}.</div>
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
       <tr><td align="center" style="padding:24px 10px">
         <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:600px;background:#fffdf8;border:1px solid #dfcfb6;border-radius:16px;overflow:hidden">
-          <tr><td><img src="https://www.noelwish.com/api/letter-workshop-image" width="600" alt="\${copy.imageAlt}" style="display:block;width:100%;max-width:600px;height:auto;border:0"></td></tr>
+          <tr><td><img src="https://www.noelwish.com/api/letter-workshop-image" width="600" alt="${copy.imageAlt}" style="display:block;width:100%;max-width:600px;height:auto;border:0"></td></tr>
           <tr><td style="padding:31px 42px 10px;text-align:center">
-            <div style="font-size:11px;letter-spacing:3px;color:#9a6b38;text-transform:uppercase">\${copy.overline}</div>
-            <h1 style="margin:13px 0 8px;font-size:29px;line-height:1.25;color:#741421;font-weight:normal">\${copy.title} \${recipient}</h1>
-            <div style="font-size:13px;font-style:italic;color:#9a8173">\${copy.northPole} \${date}</div>
+            <div style="font-size:11px;letter-spacing:3px;color:#9a6b38;text-transform:uppercase">${copy.overline}</div>
+            <h1 style="margin:13px 0 8px;font-size:29px;line-height:1.25;color:#741421;font-weight:normal">${copy.title} ${recipient}</h1>
+            <div style="font-size:13px;font-style:italic;color:#9a8173">${copy.northPole} ${date}</div>
             <div style="width:58px;height:1px;background:#c8a566;margin:20px auto 0"></div>
           </td></tr>
           <tr><td style="padding:18px 42px 34px;font-size:17px;line-height:1.75">
-            <p style="margin:0 0 20px">Ho ho ho, \${recipient}!</p>
-            <p style="margin:0 0 18px">\${introduction}</p>
-            <p style="margin:22px 0;padding:20px 22px;border-left:3px solid #b88a3b;background:#fff8e9;font-size:19px;line-height:1.65"><em>« \${message} »</em></p>
-            <p style="margin:0 0 20px">\${copy.journey}</p>
-            <p style="margin:0 0 27px">\${copy.wishes}</p>
+            <p style="margin:0 0 20px">Ho ho ho, ${recipient}!</p>
+            <p style="margin:0 0 18px">${introduction}</p>
+            <p style="margin:22px 0;padding:20px 22px;border-left:3px solid #b88a3b;background:#fff8e9;font-size:19px;line-height:1.65"><em>« ${message} »</em></p>
+            <p style="margin:0 0 20px">${copy.journey}</p>
+            <p style="margin:0 0 27px">${copy.wishes}</p>
             <table cellpadding="0" cellspacing="0" role="presentation" style="width:100%"><tr>
-              <td style="vertical-align:bottom"><p style="margin:0 0 4px">\${copy.closing}</p><p style="margin:0;font-family:'Brush Script MT','Segoe Script',cursive;font-size:28px;color:#741421">\${copy.santa}</p></td>
-              <td align="right" style="width:74px;vertical-align:bottom"><div style="display:inline-block;width:58px;height:58px;line-height:58px;border-radius:50%;background:#8f1727;color:#f4d99d;text-align:center;font:700 17px/58px Georgia,serif;border:3px double #d4b36f">\${copy.seal}</div></td>
+              <td style="vertical-align:bottom"><p style="margin:0 0 4px">${copy.closing}</p><p style="margin:0;font-family:'Brush Script MT','Segoe Script',cursive;font-size:28px;color:#741421">${copy.santa}</p></td>
+              <td align="right" style="width:74px;vertical-align:bottom"><div style="display:inline-block;width:58px;height:58px;line-height:58px;border-radius:50%;background:#8f1727;color:#f4d99d;text-align:center;font:700 17px/58px Georgia,serif;border:3px double #d4b36f">${copy.seal}</div></td>
             </tr></table>
-            <p style="margin:27px 0 0;text-align:center"><a href="https://www.noelwish.com/#wish" style="color:#8f1727;font:italic 14px Georgia,'Times New Roman',serif;text-decoration:underline;text-underline-offset:4px">\${copy.reply}</a></p>
+            <p style="margin:27px 0 0;text-align:center"><a href="https://www.noelwish.com/#wish" style="color:#8f1727;font:italic 14px Georgia,'Times New Roman',serif;text-decoration:underline;text-underline-offset:4px">${copy.reply}</a></p>
           </td></tr>
-          <tr><td align="center" style="padding:15px 24px;color:#9a8173;font:11px Arial,sans-serif;border-top:1px solid #eee2d1">\${copy.footer}</td></tr>
+          <tr><td align="center" style="padding:15px 24px;color:#9a8173;font:11px Arial,sans-serif;border-top:1px solid #eee2d1">${copy.footer}</td></tr>
         </table>
       </td></tr>
     </table>
   </body>
-</html>\`;
+</html>`;
 }
 
 function letterText(metadata, language) {
   const { copy, recipientRaw, rawSender, messageRaw } = letterData(metadata, language);
   const date = formatLetterDate(metadata, language);
   const introduction = rawSender && !isSelfSender(rawSender) ? copy.introSender(rawSender) : copy.introSelf;
-  return \`\${copy.overline.toUpperCase()}
-\${copy.northPole} \${date}
+  return `${copy.overline.toUpperCase()}
+${copy.northPole} ${date}
 
-\${copy.title} \${recipientRaw}
+${copy.title} ${recipientRaw}
 
-Ho ho ho, \${recipientRaw}!
+Ho ho ho, ${recipientRaw}!
 
-\${introduction}
+${introduction}
 
-« \${messageRaw} »
+« ${messageRaw} »
 
-\${copy.journey}
+${copy.journey}
 
-\${copy.wishes}
+${copy.wishes}
 
-\${copy.closing}
+${copy.closing}
 
-\${copy.santa}
+${copy.santa}
 
-\${copy.reply.replace(' →', '')}: https://www.noelwish.com/#wish\`;
+${copy.reply.replace(' →', '')}: https://www.noelwish.com/#wish`;
 }
 
 function confirmationHtml(metadata, product, language) {
   const copy = EMAIL_COPY[language];
   const recipient = escapeHtml(metadata.recipient || copy.recipientFallback);
   const productName = product === 'santa-surprise' ? 'Santa Surprise' : 'Big Christmas Box';
-  return \`<!doctype html><html lang="\${language}"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border-radius:20px;padding:34px"><h1 style="color:#7b0d1b">\${copy.confirmationTitle}</h1><p>\${copy.confirmationLead(productName, recipient)}</p><p>\${copy.confirmationNext}</p><p>\${copy.team}</p></div></body></html>\`;
+  return `<!doctype html><html lang="${language}"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border-radius:20px;padding:34px"><h1 style="color:#7b0d1b">${copy.confirmationTitle}</h1><p>${copy.confirmationLead(productName, recipient)}</p><p>${copy.confirmationNext}</p><p>${copy.team}</p></div></body></html>`;
 }
 
 function donationHtml(session, language) {
   const copy = EMAIL_COPY[language];
   const amount = new Intl.NumberFormat(EMAIL_LOCALES[language], { style: 'currency', currency: String(session.currency || 'eur').toUpperCase() }).format((session.amount_total || 0) / 100);
-  return \`<!doctype html><html lang="\${language}"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border-radius:20px;padding:34px"><p style="color:#a86e2a;letter-spacing:2px;font-size:12px">\${copy.donationLabel}</p><h1 style="color:#7b0d1b">\${copy.donationTitle}</h1><p>\${copy.donationConfirmed(amount)}</p><p>\${copy.donationHelp}</p><p style="font-size:13px;color:#765">\${copy.donationReceipt}</p><p>\${copy.team}</p></div></body></html>\`;
+  return `<!doctype html><html lang="${language}"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border-radius:20px;padding:34px"><p style="color:#a86e2a;letter-spacing:2px;font-size:12px">${copy.donationLabel}</p><h1 style="color:#7b0d1b">${copy.donationTitle}</h1><p>${copy.donationConfirmed(amount)}</p><p>${copy.donationHelp}</p><p style="font-size:13px;color:#765">${copy.donationReceipt}</p><p>${copy.team}</p></div></body></html>`;
 }
 
 async function sendEmail({ to, subject, html, text, eventId, scheduledAt, language = 'fr' }) {
