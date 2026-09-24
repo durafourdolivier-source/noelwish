@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#102c29">
+<title>Commandes — NoelWish</title>
+<style>
+:root{--bg:#0b2420;--panel:#123a33;--line:#f4d99a30;--gold:#f4d99a;--cream:#fff8e9;--muted:#aec5bc;--red:#9b2132}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0b2420,#123a33);color:var(--cream);font-family:Inter,system-ui,sans-serif;min-height:100vh}
+.wrap{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:36px 0 70px}header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:28px}h1{font:42px Georgia,serif;color:var(--gold);margin:0}.sub{color:var(--muted);margin:5px 0 0}.btn{border:0;border-radius:999px;background:var(--gold);color:#17352f;padding:12px 18px;font-weight:800;cursor:pointer}.login{max-width:430px;margin:14vh auto;background:#123a33;border:1px solid var(--line);padding:30px;border-radius:22px;box-shadow:0 25px 70px #0006}.field{width:100%;border:1px solid #f4d99a55;background:#fff;color:#251b18;border-radius:12px;padding:14px;font-size:16px;margin:12px 0}.error{color:#ffc3c3;min-height:22px}.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}.toolbar .field{width:min(360px,100%);margin:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}.stat{background:#123a33;border:1px solid var(--line);border-radius:16px;padding:18px}.stat b{display:block;font:30px Georgia,serif;color:var(--gold)}.table{overflow:auto;border:1px solid var(--line);border-radius:18px;background:#102f2a}table{border-collapse:collapse;width:100%;min-width:970px}th,td{text-align:left;padding:14px 15px;border-bottom:1px solid #ffffff13;vertical-align:top}th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);background:#173f37;position:sticky;top:0}td{font-size:14px}.status{display:inline-block;border-radius:99px;background:#21724d;padding:5px 9px;font-size:12px}.details{max-width:280px;color:var(--muted);line-height:1.45}.empty{text-align:center;padding:45px;color:var(--muted)}.hide{display:none!important}@media(max-width:700px){h1{font-size:32px}.stats{grid-template-columns:1fr}.wrap{width:min(100% - 20px,1240px)}}
+</style>
+</head>
+<body>
+<section class="login" id="login"><p style="color:var(--gold);letter-spacing:.15em;text-transform:uppercase;font-size:12px">NoelWish privé</p><h1 style="font-size:34px">Commandes</h1><p class="sub">Entre le mot de passe administrateur.</p><input class="field" id="password" type="password" autocomplete="current-password" placeholder="Mot de passe"><button class="btn" id="connect">Accéder</button><p class="error" id="loginError"></p></section>
+<main class="wrap hide" id="app">
+<header><div><h1>Commandes NoelWish</h1><p class="sub">Les 100 dernières commandes payées.</p></div><button class="btn" id="refresh">Actualiser</button></header>
+<div class="stats"><div class="stat"><b id="count">0</b>commandes</div><div class="stat"><b id="revenue">0 €</b>encaissés</div><div class="stat"><b id="letters">0</b>lettres magiques</div></div>
+<div class="toolbar"><input class="field" id="search" placeholder="Rechercher un prénom, email ou produit…"></div>
+<div class="table"><table><thead><tr><th>Date</th><th>Produit</th><th>Client / destinataire</th><th>Personnalisation</th><th>Montant</th><th>Statut</th></tr></thead><tbody id="orders"></tbody></table><div class="empty hide" id="empty">Aucune commande trouvée.</div></div>
+</main>
+<script>
+let secret='',allOrders=[];
+const money=(amount,currency)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:(currency||'eur').toUpperCase()}).format(amount/100);
+const esc=value=>String(value||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function detail(o){return [o.theme,o.age&&('Âge : '+o.age),o.preferences&&('Aime : '+o.preferences),o.avoid&&('À éviter : '+o.avoid),o.message&&('Message : '+o.message),o.deliveryAt&&('Envoi : '+new Date(o.deliveryAt).toLocaleString('fr-FR'))].filter(Boolean).map(esc).join('<br>')}
+function render(list){const body=document.getElementById('orders'),empty=document.getElementById('empty');body.innerHTML=list.map(o=>'<tr><td>'+new Date(o.created*1000).toLocaleString('fr-FR')+'</td><td><b>'+esc(o.product)+'</b></td><td>'+esc(o.customerEmail)+'<br><b>'+esc(o.recipient)+'</b><br>'+esc(o.deliveryEmail)+'</td><td class="details">'+detail(o)+'</td><td><b>'+money(o.amount,o.currency)+'</b></td><td><span class="status">'+esc(o.paymentStatus)+'</span></td></tr>').join('');empty.classList.toggle('hide',list.length>0)}
+async function load(){document.getElementById('loginError').textContent='';const r=await fetch('/api/admin-orders',{headers:{Authorization:'Bearer '+secret}});const data=await r.json();if(!r.ok)throw new Error(data.error||'Erreur');allOrders=data.orders||[];document.getElementById('count').textContent=allOrders.length;document.getElementById('revenue').textContent=money(allOrders.reduce((s,o)=>s+o.amount,0),'eur');document.getElementById('letters').textContent=allOrders.filter(o=>o.productId==='magic-letter').length;render(allOrders)}
+document.getElementById('connect').onclick=async()=>{secret=document.getElementById('password').value;try{await load();document.getElementById('login').classList.add('hide');document.getElementById('app').classList.remove('hide')}catch(e){document.getElementById('loginError').textContent=e.message}};
+document.getElementById('password').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('connect').click()});
+document.getElementById('refresh').onclick=()=>load().catch(e=>alert(e.message));
+document.getElementById('search').oninput=e=>{const q=e.target.value.toLowerCase();render(allOrders.filter(o=>JSON.stringify(o).toLowerCase().includes(q)))};
+</script>
+</body></html>
