@@ -119,7 +119,7 @@ export default async function handler(req, res) {
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Email delivery failed' });
+    return res.status(500).json({ error: 'Email delivery failed', detail: error instanceof Error ? error.message : String(error) });
   }
 
   return res.status(200).json({ received: true });
