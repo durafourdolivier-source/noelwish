@@ -98,11 +98,21 @@
       const data = await response.json();
 
       const isLetter = data.product === 'magic-letter';
+      const isDonation = String(data.product || '').startsWith('donation-');
       document.getElementById('recipient').textContent = data.recipient || 'La personne choisie';
       document.getElementById('delivery').textContent = isLetter ? formatDelivery(data) : 'Préparation en cours';
       document.getElementById('email').textContent = data.deliveryEmail || 'Adresse enregistrée';
 
-      if (!isLetter) {
+      if (isDonation) {
+        const amount = new Intl.NumberFormat('fr-FR', {style:'currency',currency:String(data.currency || 'EUR').toUpperCase()}).format((data.amount || 0) / 100);
+        document.querySelector('.eyebrow').textContent = 'Contribution confirmée';
+        document.getElementById('title').textContent = 'Merci pour ton geste solidaire !';
+        document.getElementById('lead').textContent = 'Ta contribution de ' + amount + ' aidera NoelWish à préparer des cadeaux solidaires.';
+        document.getElementById('details').style.display = 'none';
+        document.getElementById('noticeText').textContent = 'Un bilan transparent des sommes collectées et de leur utilisation sera publié. Cette contribution ne donne pas droit à un reçu fiscal.';
+        document.querySelector('.btn.primary').textContent = 'Découvrir le projet solidaire';
+        document.querySelector('.btn.primary').href = '/#give';
+      } else if (!isLetter) {
         document.getElementById('title').textContent = 'Merci, ta surprise est confirmée !';
         document.getElementById('lead').textContent = 'Notre atelier du Pôle Nord va maintenant préparer ta commande.';
         document.getElementById('noticeText').textContent = 'Tu recevras les informations utiles pour le suivi de ta surprise.';
