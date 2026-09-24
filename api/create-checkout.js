@@ -53,6 +53,45 @@ const PRICE_TABLE = {
   'donation-50': { eur: 5000, usd: 5000, gbp: 4300, aud: 7900, cad: 7000, brl: 30000 },
   'donation-100': { eur: 10000, usd: 10000, gbp: 8500, aud: 15900, cad: 14000, brl: 60000 }
 };
+const LOCALIZED_PRODUCTS = {
+  en: {
+    'magic-letter': ['Magical NoelWish letter', 'A personalized Christmas letter delivered by email.'],
+    'santa-surprise': ['Santa Surprise', 'A gift selected around the recipient’s interests.'],
+    'big-christmas-box': ['Big Christmas Box', 'A large personalized selection of Christmas surprises.'],
+    'donation-10': ['Little solidarity sparkle', 'A contribution to the NoelWish solidarity gift fund. No tax receipt.'],
+    'donation-25': ['A solidarity smile', 'A contribution to the NoelWish solidarity gift fund. No tax receipt.'],
+    'donation-50': ['More joy', 'A contribution to the NoelWish solidarity gift fund. No tax receipt.'],
+    'donation-100': ['Big heart', 'A contribution to the NoelWish solidarity gift fund. No tax receipt.']
+  },
+  es: {
+    'magic-letter': ['Carta mágica NoelWish', 'Una carta de Navidad personalizada enviada por email.'],
+    'santa-surprise': ['Santa Surprise', 'Un regalo elegido según los gustos del destinatario.'],
+    'big-christmas-box': ['Big Christmas Box', 'Una gran selección personalizada de sorpresas navideñas.'],
+    'donation-10': ['Pequeña chispa solidaria', 'Contribución al fondo de regalos solidarios NoelWish. Sin deducción fiscal.'],
+    'donation-25': ['Una sonrisa solidaria', 'Contribución al fondo de regalos solidarios NoelWish. Sin deducción fiscal.'],
+    'donation-50': ['Más alegría', 'Contribución al fondo de regalos solidarios NoelWish. Sin deducción fiscal.'],
+    'donation-100': ['Gran corazón', 'Contribución al fondo de regalos solidarios NoelWish. Sin deducción fiscal.']
+  },
+  pt: {
+    'magic-letter': ['Carta mágica NoelWish', 'Uma carta de Natal personalizada enviada por email.'],
+    'santa-surprise': ['Santa Surprise', 'Um presente escolhido conforme os gostos do destinatário.'],
+    'big-christmas-box': ['Big Christmas Box', 'Uma grande seleção personalizada de surpresas de Natal.'],
+    'donation-10': ['Pequena faísca solidária', 'Contribuição ao fundo de presentes solidários NoelWish. Sem recibo fiscal.'],
+    'donation-25': ['Um sorriso solidário', 'Contribuição ao fundo de presentes solidários NoelWish. Sem recibo fiscal.'],
+    'donation-50': ['Mais alegria', 'Contribuição ao fundo de presentes solidários NoelWish. Sem recibo fiscal.'],
+    'donation-100': ['Grande coração', 'Contribuição ao fundo de presentes solidários NoelWish. Sem recibo fiscal.']
+  },
+  de: {
+    'magic-letter': ['Magischer NoelWish-Brief', 'Ein persönlicher Weihnachtsbrief per E-Mail.'],
+    'santa-surprise': ['Santa Surprise', 'Ein Geschenk passend zu den Interessen des Empfängers.'],
+    'big-christmas-box': ['Big Christmas Box', 'Eine große personalisierte Auswahl an Weihnachtsüberraschungen.'],
+    'donation-10': ['Kleiner solidarischer Funke', 'Beitrag zum NoelWish-Geschenkfonds. Nicht steuerlich absetzbar.'],
+    'donation-25': ['Ein solidarisches Lächeln', 'Beitrag zum NoelWish-Geschenkfonds. Nicht steuerlich absetzbar.'],
+    'donation-50': ['Mehr Freude', 'Beitrag zum NoelWish-Geschenkfonds. Nicht steuerlich absetzbar.'],
+    'donation-100': ['Großes Herz', 'Beitrag zum NoelWish-Geschenkfonds. Nicht steuerlich absetzbar.']
+  }
+};
+
 const MARKET_CONFIG = {
   FR: { currency: 'eur', country: 'FR', shipping: 900 },
   US: { currency: 'usd', country: 'US', shipping: 900 },
@@ -78,6 +117,8 @@ module.exports = async function handler(req, res) {
   const requestedCurrency = String(req.body?.currency || market.currency).toLowerCase();
   const currency = PRICE_TABLE[productId]?.[requestedCurrency] ? requestedCurrency : market.currency;
   const amount = PRICE_TABLE[productId]?.[currency] || item.amount;
+  const language = ['fr', 'en', 'es', 'pt', 'de'].includes(req.body?.language) ? req.body.language : 'fr';
+  const localized = LOCALIZED_PRODUCTS[language]?.[productId];
 
   const origin = 'https://www.noelwish.com';
   const params = new URLSearchParams();
@@ -86,14 +127,16 @@ module.exports = async function handler(req, res) {
   params.set('cancel_url', `${origin}/#gifts`);
   params.set('customer_creation', 'always');
   params.set('billing_address_collection', 'auto');
+  params.set('locale', language);
   params.set('line_items[0][quantity]', '1');
   params.set('line_items[0][price_data][currency]', currency);
   params.set('line_items[0][price_data][unit_amount]', String(amount));
-  params.set('line_items[0][price_data][product_data][name]', item.name);
-  params.set('line_items[0][price_data][product_data][description]', item.description);
+  params.set('line_items[0][price_data][product_data][name]', localized?.[0] || item.name);
+  params.set('line_items[0][price_data][product_data][description]', localized?.[1] || item.description);
   params.set('metadata[noelwish_product]', productId);
   params.set('metadata[market]', marketCode);
   params.set('metadata[currency]', currency);
+  params.set('metadata[language]', language);
   const details = req.body?.personalization || {};
   const metadata = {
     recipient: details.name,
