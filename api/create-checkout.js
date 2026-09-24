@@ -92,6 +92,14 @@ const LOCALIZED_PRODUCTS = {
   }
 };
 
+const SHIPPING_LABELS = {
+  fr: 'Livraison standard',
+  en: 'Standard delivery',
+  es: 'Envío estándar',
+  pt: 'Entrega padrão',
+  de: 'Standardversand'
+};
+
 const MARKET_CONFIG = {
   FR: { currency: 'eur', country: 'FR', shipping: 900 },
   US: { currency: 'usd', country: 'US', shipping: 900 },
@@ -123,8 +131,8 @@ module.exports = async function handler(req, res) {
   const origin = 'https://www.noelwish.com';
   const params = new URLSearchParams();
   params.set('mode', 'payment');
-  params.set('success_url', `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`);
-  params.set('cancel_url', `${origin}/#gifts`);
+  params.set('success_url', `${origin}/success.html?lang=${language}&market=${marketCode}&session_id={CHECKOUT_SESSION_ID}`);
+  params.set('cancel_url', `${origin}/?lang=${language}&market=${marketCode}#gifts`);
   params.set('customer_creation', 'always');
   params.set('billing_address_collection', 'auto');
   params.set('locale', language);
@@ -162,7 +170,7 @@ module.exports = async function handler(req, res) {
     params.set('shipping_options[0][shipping_rate_data][type]', 'fixed_amount');
     params.set('shipping_options[0][shipping_rate_data][fixed_amount][amount]', String(market.shipping));
     params.set('shipping_options[0][shipping_rate_data][fixed_amount][currency]', currency);
-    params.set('shipping_options[0][shipping_rate_data][display_name]', 'Standard delivery');
+    params.set('shipping_options[0][shipping_rate_data][display_name]', SHIPPING_LABELS[language]);
     params.set('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][unit]', 'business_day');
     params.set('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][value]', '3');
     params.set('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][unit]', 'business_day');
