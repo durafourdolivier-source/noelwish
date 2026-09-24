@@ -106,6 +106,9 @@ function letterHtml(metadata) {
                     </td>
                   </tr>
                 </table>
+                <p style="margin:27px 0 0;text-align:center">
+                  <a href="https://www.noelwish.com/#wish" style="color:#8f1727;font:italic 14px Georgia,'Times New Roman',serif;text-decoration:underline;text-underline-offset:4px">Répondre au Père Noël →</a>
+                </p>
               </td>
             </tr>
             <tr>
@@ -145,7 +148,9 @@ Je te souhaite de belles fêtes, pleines de douceur, de rires et de précieux mo
 
 Avec toute mon affection,
 
-Le Père Noël`;
+Le Père Noël
+
+Répondre au Père Noël : https://www.noelwish.com/#wish`;
 }
 
 function confirmationHtml(metadata, product) {
