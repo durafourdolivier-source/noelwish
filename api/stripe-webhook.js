@@ -37,43 +37,79 @@ function isSelfSender(value = '') {
   return /^(moi([ -]?même)?|me|myself)$/i.test(String(value).trim());
 }
 
+function formatLetterDate(metadata) {
+  const source = metadata.delivery_at || new Date().toISOString();
+  const date = new Date(source);
+  if (!date.getTime()) return '';
+  try {
+    return new Intl.DateTimeFormat('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      timeZone: metadata.delivery_timezone || 'Europe/Paris'
+    }).format(date);
+  } catch {
+    return new Intl.DateTimeFormat('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    }).format(date);
+  }
+}
+
 function letterHtml(metadata) {
   const recipient = escapeHtml(metadata.recipient || 'mon ami');
-  const rawSender = metadata.sender || '';
-  const senderLine = rawSender && !isSelfSender(rawSender)
-    ? `Cette lettre a été préparée avec beaucoup d’attention par <strong>${escapeHtml(rawSender)}</strong>, qui tenait à t’offrir un moment rien qu’à toi.`
-    : 'Cette lettre a été préparée spécialement pour toi, avec beaucoup d’attention.';
+  const rawSender = String(metadata.sender || '').trim();
+  const sender = escapeHtml(rawSender);
   const message = escapeHtml(metadata.message || 'Je te souhaite un merveilleux Noël.');
+  const date = escapeHtml(formatLetterDate(metadata));
+  const introduction = rawSender && !isSelfSender(rawSender)
+    ? `<strong>${sender}</strong> m’a confié quelques mots rien que pour toi…`
+    : 'J’ai trouvé dans mon courrier quelques mots qui t’étaient spécialement destinés…';
 
   return `<!doctype html>
 <html lang="fr">
-  <body style="margin:0;background:#f6f1e8;font-family:Georgia,'Times New Roman',serif;color:#38251f">
-    <div style="display:none;max-height:0;overflow:hidden">Un courrier du Pôle Nord est arrivé pour ${recipient}.</div>
+  <body style="margin:0;background:#f4efe6;font-family:Georgia,'Times New Roman',serif;color:#38251f">
+    <div style="display:none;max-height:0;overflow:hidden">Une lettre du Père Noël est arrivée pour ${recipient}.</div>
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
       <tr>
-        <td align="center" style="padding:28px 12px">
-          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:590px;background:#fffdf8;border:1px solid #dfcfb6;border-radius:14px">
+        <td align="center" style="padding:24px 10px">
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:600px;background:#fffdf8;border:1px solid #dfcfb6;border-radius:16px;overflow:hidden">
             <tr>
-              <td style="padding:42px 42px 12px;text-align:center">
+              <td>
+                <img src="https://www.noelwish.com/api/letter-workshop-image" width="600" alt="Le Père Noël signe ta lettre dans son atelier" style="display:block;width:100%;max-width:600px;height:auto;border:0">
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:31px 42px 10px;text-align:center">
                 <div style="font-size:11px;letter-spacing:3px;color:#9a6b38;text-transform:uppercase">Courrier du Pôle Nord</div>
-                <h1 style="margin:14px 0 4px;font-size:29px;line-height:1.25;color:#741421;font-weight:normal">Une lettre pour ${recipient}</h1>
-                <div style="width:58px;height:1px;background:#c8a566;margin:22px auto 0"></div>
+                <h1 style="margin:13px 0 8px;font-size:29px;line-height:1.25;color:#741421;font-weight:normal">Une lettre pour ${recipient}</h1>
+                <div style="font-size:13px;font-style:italic;color:#9a8173">Pôle Nord, le ${date}</div>
+                <div style="width:58px;height:1px;background:#c8a566;margin:20px auto 0"></div>
               </td>
             </tr>
             <tr>
-              <td style="padding:18px 42px 38px;font-size:17px;line-height:1.75">
+              <td style="padding:18px 42px 34px;font-size:17px;line-height:1.75">
                 <p style="margin:0 0 20px">Ho ho ho, ${recipient} !</p>
-                <p style="margin:0 0 20px">Une pensée remplie de magie vient de traverser les étoiles pour arriver jusqu’à mon atelier.</p>
-                <p style="margin:26px 0;padding:20px 22px;border-left:3px solid #b88a3b;background:#fff8e9;font-size:19px;line-height:1.65"><em>« ${message} »</em></p>
-                <p style="margin:0 0 20px">${senderLine}</p>
-                <p style="margin:0 0 20px">Garde précieusement ces mots : ils ont voyagé jusqu’ici parce que quelqu’un voulait rendre ton Noël encore un peu plus spécial.</p>
-                <p style="margin:0 0 30px">Je te souhaite de belles fêtes, pleines de douceur, de rires et de merveilleux souvenirs auprès de ceux qui comptent pour toi.</p>
-                <p style="margin:0">Avec toute la magie du Pôle Nord,</p>
-                <p style="margin:8px 0 0;font-family:'Brush Script MT','Segoe Script',cursive;font-size:27px;color:#741421">Le Père Noël</p>
+                <p style="margin:0 0 18px">${introduction}</p>
+                <p style="margin:22px 0;padding:20px 22px;border-left:3px solid #b88a3b;background:#fff8e9;font-size:19px;line-height:1.65"><em>« ${message} »</em></p>
+                <p style="margin:0 0 20px">Certaines pensées n’ont besoin que de quelques mots pour voyager loin. Celle-ci a trouvé son chemin jusqu’à toi.</p>
+                <p style="margin:0 0 27px">Je te souhaite de belles fêtes, pleines de douceur, de rires et de précieux moments auprès de ceux qui comptent pour toi.</p>
+                <table cellpadding="0" cellspacing="0" role="presentation" style="width:100%">
+                  <tr>
+                    <td style="vertical-align:bottom">
+                      <p style="margin:0 0 4px">Avec toute mon affection,</p>
+                      <p style="margin:0;font-family:'Brush Script MT','Segoe Script',cursive;font-size:28px;color:#741421">Le Père Noël</p>
+                    </td>
+                    <td align="right" style="width:74px;vertical-align:bottom">
+                      <div style="display:inline-block;width:58px;height:58px;line-height:58px;border-radius:50%;background:#8f1727;color:#f4d99d;text-align:center;font:700 17px/58px Georgia,serif;border:3px double #d4b36f">PN</div>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
             <tr>
-              <td align="center" style="padding:16px 24px;color:#9a8173;font:11px Arial,sans-serif;border-top:1px solid #eee2d1">Une attention personnelle envoyée depuis le Pôle Nord</td>
+              <td align="center" style="padding:15px 24px;color:#9a8173;font:11px Arial,sans-serif;border-top:1px solid #eee2d1">Courrier personnel préparé dans l’atelier du Père Noël</td>
             </tr>
           </table>
         </td>
@@ -87,25 +123,27 @@ function letterText(metadata) {
   const recipient = metadata.recipient || 'mon ami';
   const rawSender = String(metadata.sender || '').trim();
   const message = metadata.message || 'Je te souhaite un merveilleux Noël.';
-  const senderLine = rawSender && !isSelfSender(rawSender)
-    ? `Cette lettre a été préparée avec beaucoup d’attention par ${rawSender}, qui tenait à t’offrir un moment rien qu’à toi.`
-    : 'Cette lettre a été préparée spécialement pour toi, avec beaucoup d’attention.';
+  const date = formatLetterDate(metadata);
+  const introduction = rawSender && !isSelfSender(rawSender)
+    ? `${rawSender} m’a confié quelques mots rien que pour toi…`
+    : 'J’ai trouvé dans mon courrier quelques mots qui t’étaient spécialement destinés…';
 
-  return `Une lettre pour ${recipient}
+  return `COURRIER DU PÔLE NORD
+Pôle Nord, le ${date}
+
+Une lettre pour ${recipient}
 
 Ho ho ho, ${recipient} !
 
-Une pensée remplie de magie vient de traverser les étoiles pour arriver jusqu’à mon atelier.
+${introduction}
 
 « ${message} »
 
-${senderLine}
+Certaines pensées n’ont besoin que de quelques mots pour voyager loin. Celle-ci a trouvé son chemin jusqu’à toi.
 
-Garde précieusement ces mots : ils ont voyagé jusqu’ici parce que quelqu’un voulait rendre ton Noël encore un peu plus spécial.
+Je te souhaite de belles fêtes, pleines de douceur, de rires et de précieux moments auprès de ceux qui comptent pour toi.
 
-Je te souhaite de belles fêtes, pleines de douceur, de rires et de merveilleux souvenirs auprès de ceux qui comptent pour toi.
-
-Avec toute la magie du Pôle Nord,
+Avec toute mon affection,
 
 Le Père Noël`;
 }
