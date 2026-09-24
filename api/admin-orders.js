@@ -28,7 +28,7 @@ function productLabel(id) {
 
 function defaultStatus(productId, metadata) {
   if (metadata.fulfillment_status) return metadata.fulfillment_status;
-  if (productId === 'magic-letter') return metadata.delivery_at ? 'scheduled' : 'completed';
+  if (productId === 'magic-letter') return metadata.delivery_mode === 'scheduled' ? 'scheduled' : 'completed';
   if (productId?.startsWith('donation-')) return 'completed';
   return 'new';
 }
