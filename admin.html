@@ -30,7 +30,7 @@ header{display:flex;justify-content:space-between;align-items:center;gap:20px;ma
 <div class="modal hide" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="panel"><div class="panel-head"><div><h2 id="modalTitle">Gérer la commande</h2><div class="order-id" id="modalId"></div></div><button class="close" id="close" aria-label="Fermer">×</button></div><div class="panel-body"><div class="grid" id="modalDetails"></div><div class="manage"><div><label for="editStatus">Statut de traitement</label><select class="field" id="editStatus"></select></div><div><label for="editTracking">Numéro ou lien de suivi</label><input class="field" id="editTracking" placeholder="Ex. 6A123456789"></div><div class="full"><label for="editNote">Note interne</label><textarea class="field" id="editNote" placeholder="Informations utiles pour préparer cette commande…"></textarea></div></div><div class="panel-actions"><button class="btn secondary" id="stripeLink">Voir dans Stripe</button><button class="btn" id="save">Enregistrer</button></div></div></div></div>
 <div class="toast hide" id="toast"></div>
 <script>
-const STATUS={new:'Nouvelle',scheduled:'Envoi programmé',preparing:'En préparation',ready:'Prête à expédier',shipped:'Expédiée',completed:'Terminée',cancelled:'Annulée',refunded:'Remboursée'};
+const STATUS={new:'Nouvelle',scheduled:'Envoi programmé',preparing:'En préparation',ready:'Prête à expédier',shipped:'Expédiée',completed:'Terminée',cancelled:'Annulée',refunded:'Remboursée (suivi interne)'};
 let secret='',allOrders=[],current=null;
 const byId=id=>document.getElementById(id);
 const esc=value=>String(value||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
