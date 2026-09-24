@@ -8,7 +8,7 @@ async function startCheckout(product, button, personalization = {}) {
     const response = await fetch('/api/create-checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product, personalization, market: window.NOELWISH_MARKET || localStorage.getItem('noelwish_market') || 'FR', currency: window.NOELWISH_CURRENCY || localStorage.getItem('noelwish_currency') || 'eur' })
+      body: JSON.stringify({ product, personalization, market: window.NOELWISH_MARKET || localStorage.getItem('noelwish_market') || 'FR', currency: window.NOELWISH_CURRENCY || localStorage.getItem('noelwish_currency') || 'eur', language: document.documentElement.lang || 'fr' })
     });
     const data = await response.json();
     if (!response.ok || !data.url) throw new Error(data.error || 'Checkout unavailable');
