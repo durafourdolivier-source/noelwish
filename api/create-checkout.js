@@ -7,13 +7,13 @@ const PRODUCTS = {
   },
   'santa-surprise': {
     name: 'Santa Surprise',
-    description: 'Surprise de Noël personnalisée selon les goûts du destinataire.',
+    description: 'Surprise personnalisée. Livraison standard France métropolitaine : 9 €.',
     amount: 2900,
     physical: true
   },
   'big-christmas-box': {
     name: 'Big Christmas Box',
-    description: 'Grande sélection de surprises de Noël personnalisées.',
+    description: 'Grande box personnalisée. Livraison standard France métropolitaine : 9 €.',
     amount: 6900,
     physical: true
   },
@@ -84,9 +84,17 @@ module.exports = async function handler(req, res) {
   });
 
   if (item.physical) {
-    ['FR', 'BE', 'CH', 'DE', 'ES', 'IT', 'PT', 'GB', 'AU', 'CA', 'US'].forEach((country, index) => {
-      params.set(`shipping_address_collection[allowed_countries][${index}]`, country);
-    });
+    params.set('shipping_address_collection[allowed_countries][0]', 'FR');
+    params.set('shipping_options[0][shipping_rate_data][type]', 'fixed_amount');
+    params.set('shipping_options[0][shipping_rate_data][fixed_amount][amount]', '900');
+    params.set('shipping_options[0][shipping_rate_data][fixed_amount][currency]', 'eur');
+    params.set('shipping_options[0][shipping_rate_data][display_name]', 'Livraison standard — France métropolitaine');
+    params.set('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][unit]', 'business_day');
+    params.set('shipping_options[0][shipping_rate_data][delivery_estimate][minimum][value]', '3');
+    params.set('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][unit]', 'business_day');
+    params.set('shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]', '7');
+    params.set('metadata[shipping_fee]', '900');
+    params.set('metadata[shipping_zone]', 'France métropolitaine');
   }
 
   try {
