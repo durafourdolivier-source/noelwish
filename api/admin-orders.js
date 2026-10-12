@@ -108,7 +108,7 @@ function escapeHtml(value) {
   return String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 }
 
-async function sendShippingEmail(session, tracking) {
+async function sendShippingEmail(session, tracking, force = false) {
   if (!process.env.RESEND_API_KEY) throw new Error('Resend non configuré');
   const metadata = session.metadata || {};
   const language = SHIPPING_COPY[metadata.language] ? metadata.language : 'fr';
@@ -125,7 +125,7 @@ async function sendShippingEmail(session, tracking) {
     headers: {
       Authorization: 'Bearer ' + process.env.RESEND_API_KEY,
       'Content-Type': 'application/json',
-      'Idempotency-Key': 'shipping-' + session.id + '-' + crypto.createHash('sha1').update(tracking).digest('hex').slice(0, 16)
+      'Idempotency-Key': 'shipping-' + session.id + '-' + crypto.createHash('sha1').update(tracking + (force ? '-' + Date.now() : '')).digest('hex').slice(0, 16)
     },
     body: JSON.stringify({
       from: 'NoelWish <magic@noelwish.com>',
@@ -146,6 +146,20 @@ module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'private, no-store, max-age=0');
 
   try {
+    if (req.method === 'POST') {
+      const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+      const id = String(body.id || '');
+      if (!/^cs_[A-Za-z0-9_]+$/.test(id)) return res.status(400).json({ error: 'Commande invalide' });
+      if (body.action !== 'resend_shipping') return res.status(400).json({ error: 'Action invalide' });
+      const session = await stripeRequest(`/checkout/sessions/${encodeURIComponent(id)}`);
+      const product = session.metadata?.noelwish_product;
+      const tracking = String(session.metadata?.tracking_number || '').trim();
+      if (!['santa-surprise', 'big-christmas-box'].includes(product)) return res.status(400).json({ error: 'Cette commande n’est pas un colis physique' });
+      if (!tracking) return res.status(400).json({ error: 'Ajoute d’abord un numéro ou lien de suivi' });
+      await sendShippingEmail(session, tracking, true);
+      return res.status(200).json({ ok: true, emailSent: true });
+    }
+
     if (req.method === 'PATCH') {
       const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
       const id = String(body.id || '');
@@ -232,6 +246,7 @@ module.exports = async function handler(req, res) {
         shippingAddress: shipping.address || null,
         tracking: metadata.tracking_number || '',
         note: metadata.admin_note || '',
+        shippingEmailSentFor: metadata.shipping_email_tracking || '',
         paymentIntent: session.payment_intent || '',
         livemode: Boolean(session.livemode)
       };
