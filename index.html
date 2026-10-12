@@ -50,5 +50,5 @@ if(el.classList.contains('heart'))trackEvent('wish_liked',{wish_source:el.datase
 if(el.closest('#gifts')&&el.classList.contains('choice'))trackEvent('gift_theme_selected',{theme:el.textContent.trim().slice(0,40)});if(el.closest('#gift-modal')&&el.dataset.value)trackEvent('gift_option_selected',{option:el.dataset.value,product:giftFlow.product,step:giftFlow.step});});
 window.addEventListener('hashchange',()=>{const section=location.hash.slice(1);if(section==='gifts')trackEvent('view_item_list',{list:'gifts'});if(section==='donate')trackEvent('view_donation_options');if(section==='result'&&S.wish?.id&&completedWish!==S.wish.id){completedWish=S.wish.id;trackEvent('wish_completed',{privacy:S.wish.privacy,wish_kind:S.wish.kind})}});
 })();
-</script><script src="/seo-links.js"></script></body></html>
+</script><script src="/nw-events.js"></script><script src="/seo-links.js"></script></body></html>
 <!-- deployment refresh: 2026-10-12 -->

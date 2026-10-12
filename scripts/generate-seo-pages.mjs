@@ -92,7 +92,7 @@ for (const [key,page] of Object.entries(pages)) {
   for (const lang of Object.keys(languages)) {
     const dir = path.join(root,lang);
     fs.mkdirSync(dir,{recursive:true});
-    const analyticsMarkup = `<script defer src="/_vercel/insights/script.js"></script><script src="/analytics.js"></script>`;
+    const analyticsMarkup = `<script defer src="/_vercel/insights/script.js"></script><script src="/nw-events.js"></script>`;
     const trackedHtml = render(key,lang)
       .replace('</style></head><body>', `</style>${analyticsMarkup}</head><body data-product="${page.product || key}">`)
       .replaceAll(`<a class="btn" href="/?lang=${lang}#${page.action}">`, `<a class="btn" href="/?lang=${lang}#${page.action}" data-product="${page.product || key}" data-analytics-label="seo_cta">`);
