@@ -72,6 +72,8 @@
       </div>
     </section>
   </main>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script src="/analytics.js"></script>
   <script>
     const card = document.getElementById('card');
     const params = new URLSearchParams(location.search);
@@ -98,6 +100,22 @@
       if (!response.ok) throw new Error('session unavailable');
       const data = await response.json();
 
+      const purchaseKey = 'noelwish_purchase_' + sessionId;
+      if (!sessionStorage.getItem(purchaseKey)) {
+        window.noelwishTrack?.('purchase', {
+          transaction_id: sessionId.slice(-16),
+          product: data.product,
+          value: Number(data.amount || 0) / 100,
+          amount_minor: Number(data.amount || 0),
+          currency: String(data.currency || 'eur').toUpperCase(),
+          market: params.get('market'),
+          language: params.get('lang'),
+          order_type: String(data.product || '').startsWith('donation-') ? 'donation' : data.product === 'magic-letter' ? 'digital' : 'physical',
+          delivery_mode: data.deliveryMode
+        });
+        sessionStorage.setItem(purchaseKey, '1');
+      }
+
       const isLetter = data.product === 'magic-letter';
       const isDonation = String(data.product || '').startsWith('donation-');
       document.getElementById('recipient').textContent = data.recipient || 'La personne choisie';
@@ -122,7 +140,8 @@
       }
     }
 
-    loadOrder().catch(() => {
+    loadOrder().catch(error => {
+      window.noelwishTrack?.('purchase_confirmation_error', {error_type: error?.message || 'unknown'});
       document.getElementById('details').style.display = 'none';
       document.getElementById('error').style.display = 'block';
     }).finally(() => card.classList.remove('loading'));
