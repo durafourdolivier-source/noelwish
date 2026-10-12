@@ -113,6 +113,17 @@
           order_type: String(data.product || '').startsWith('donation-') ? 'donation' : data.product === 'magic-letter' ? 'digital' : 'physical',
           delivery_mode: data.deliveryMode
         });
+        window.noelwishTrack?.('funnel_step', {
+          flow: String(data.product || '').startsWith('donation-') ? 'donation' : data.product,
+          stage: 'purchase_completed',
+          stage_sequence: 10,
+          product: data.product,
+          value: Number(data.amount || 0) / 100,
+          currency: String(data.currency || 'eur').toUpperCase(),
+          market: params.get('market'),
+          language: params.get('lang'),
+          delivery_mode: data.deliveryMode
+        });
         sessionStorage.setItem(purchaseKey, '1');
       }
 
