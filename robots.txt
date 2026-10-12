@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /success
+Disallow: /api/
+
+Sitemap: https://www.noelwish.com/sitemap.xml
