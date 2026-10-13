@@ -78,6 +78,12 @@
     const card = document.getElementById('card');
     const params = new URLSearchParams(location.search);
     const sessionId = params.get('session_id');
+    const language = ['fr','en','es','pt','de'].includes(params.get('lang')) ? params.get('lang') : 'fr';
+    const market = /^[A-Z]{2}$/.test(params.get('market') || '') ? params.get('market') : 'FR';
+    const localizedHome = '/?lang=' + encodeURIComponent(language) + '&market=' + encodeURIComponent(market);
+    document.documentElement.lang = language;
+    document.querySelector('.btn.primary').href = localizedHome + '#gifts';
+    document.querySelector('.btn.secondary').href = localizedHome + '#home';
 
     function formatDelivery(data) {
       if (data.deliveryMode !== 'scheduled' || !data.deliveryAt) return 'Dans quelques instants';
@@ -141,7 +147,7 @@
         document.getElementById('details').style.display = 'none';
         document.getElementById('noticeText').textContent = 'Un bilan transparent des sommes collectées et de leur utilisation sera publié. Cette contribution ne donne pas droit à un reçu fiscal.';
         document.querySelector('.btn.primary').textContent = 'Découvrir le projet solidaire';
-        document.querySelector('.btn.primary').href = '/#give';
+        document.querySelector('.btn.primary').href = localizedHome + '#give';
       } else if (!isLetter) {
         document.getElementById('title').textContent = 'Merci, ta surprise est confirmée !';
         document.getElementById('lead').textContent = 'Notre atelier du Pôle Nord va maintenant préparer ta commande.';
