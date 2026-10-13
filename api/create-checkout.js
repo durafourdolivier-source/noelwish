@@ -137,6 +137,7 @@ module.exports = async function handler(req, res) {
   params.set('cancel_url', `${origin}/?lang=${language}&market=${marketCode}#${returnSection}`);
   params.set('customer_creation', 'always');
   params.set('billing_address_collection', 'auto');
+  params.set('adaptive_pricing[enabled]', 'false');
   params.set('phone_number_collection[enabled]', 'false');
   params.set('locale', language);
   params.set('line_items[0][quantity]', '1');
