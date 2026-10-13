@@ -7,37 +7,37 @@ const PRODUCTS = {
   },
   'santa-surprise': {
     name: 'Santa Surprise',
-    description: 'Surprise personnalisée. Livraison standard France métropolitaine : 9 €.',
+    description: 'Surprise personnalisée choisie selon les goûts du destinataire.',
     amount: 2900,
     physical: true
   },
   'big-christmas-box': {
     name: 'Big Christmas Box',
-    description: 'Grande box personnalisée. Livraison standard France métropolitaine : 9 €.',
+    description: 'Grande box personnalisée avec plusieurs surprises de Noël.',
     amount: 6900,
     physical: true
   },
   'donation-10': {
     name: 'Petite étincelle solidaire',
-    description: 'Contribution de 10 € au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
+    description: 'Contribution au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
     amount: 1000,
     physical: false
   },
   'donation-25': {
     name: 'Un sourire solidaire',
-    description: 'Contribution de 25 € au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
+    description: 'Contribution au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
     amount: 2500,
     physical: false
   },
   'donation-50': {
     name: 'Plus de joie',
-    description: 'Contribution de 50 € au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
+    description: 'Contribution au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
     amount: 5000,
     physical: false
   },
   'donation-100': {
     name: 'Grand cœur',
-    description: 'Contribution de 100 € au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
+    description: 'Contribution au fonds de cadeaux solidaires NoelWish. Aucun reçu fiscal.',
     amount: 10000,
     physical: false
   }
@@ -120,10 +120,11 @@ module.exports = async function handler(req, res) {
   const productId = req.body?.product;
   const item = PRODUCTS[productId];
   if (!item) return res.status(400).json({ error: 'Unknown product' });
-  const marketCode = String(req.body?.market || 'FR').toUpperCase();
-  const market = MARKET_CONFIG[marketCode] || MARKET_CONFIG.FR;
-  const requestedCurrency = String(req.body?.currency || market.currency).toLowerCase();
-  const currency = PRICE_TABLE[productId]?.[requestedCurrency] ? requestedCurrency : market.currency;
+  const requestedMarketCode = String(req.body?.market || 'FR').toUpperCase();
+  const marketCode = MARKET_CONFIG[requestedMarketCode] ? requestedMarketCode : 'FR';
+  const market = MARKET_CONFIG[marketCode];
+  // The selected market is authoritative; stale browser state cannot override its currency.
+  const currency = market.currency;
   const amount = PRICE_TABLE[productId]?.[currency] || item.amount;
   const language = ['fr', 'en', 'es', 'pt', 'de'].includes(req.body?.language) ? req.body.language : 'fr';
   const localized = LOCALIZED_PRODUCTS[language]?.[productId];
@@ -132,9 +133,11 @@ module.exports = async function handler(req, res) {
   const params = new URLSearchParams();
   params.set('mode', 'payment');
   params.set('success_url', `${origin}/success.html?lang=${language}&market=${marketCode}&session_id={CHECKOUT_SESSION_ID}`);
-  params.set('cancel_url', `${origin}/?lang=${language}&market=${marketCode}#gifts`);
+  const returnSection = productId.startsWith('donation-') ? 'give' : 'gifts';
+  params.set('cancel_url', `${origin}/?lang=${language}&market=${marketCode}#${returnSection}`);
   params.set('customer_creation', 'always');
   params.set('billing_address_collection', 'auto');
+  params.set('phone_number_collection[enabled]', 'false');
   params.set('locale', language);
   params.set('line_items[0][quantity]', '1');
   params.set('line_items[0][price_data][currency]', currency);
