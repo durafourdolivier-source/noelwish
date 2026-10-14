@@ -134,7 +134,7 @@ module.exports = async function handler(req, res) {
   params.set('mode', 'payment');
   params.set('success_url', `${origin}/success.html?lang=${language}&market=${marketCode}&session_id={CHECKOUT_SESSION_ID}`);
   const returnSection = productId.startsWith('donation-') ? 'give' : 'gifts';
-  params.set('cancel_url', `${origin}/?lang=${language}&market=${marketCode}#${returnSection}`);
+  params.set('cancel_url', `${origin}/?lang=${language}&market=${marketCode}&checkout=cancelled&product=${encodeURIComponent(productId)}#${returnSection}`);
   params.set('customer_creation', 'always');
   params.set('billing_address_collection', 'auto');
   params.set('adaptive_pricing[enabled]', 'false');

@@ -28,6 +28,9 @@ async function startCheckout(product, button, personalization = {}) {
     });
     const data = await response.json();
     if (!response.ok || !data.url) throw new Error(data.error || 'Checkout unavailable');
+    try {
+      localStorage.setItem('noelwish_checkout_pending', JSON.stringify({product, market, currency, language, startedAt:Date.now()}));
+    } catch {}
     window.noelwishTrack?.('checkout_created', {product, market, currency, language, flow_id:flowId});
     window.noelwishTrack?.('funnel_step', {flow, stage:'stripe_redirect', stage_sequence:9, product, flow_id:flowId, market, currency, language});
     window.location.assign(data.url);

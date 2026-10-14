@@ -105,6 +105,10 @@
       const response = await fetch('/api/checkout-session?session_id=' + encodeURIComponent(sessionId));
       if (!response.ok) throw new Error('session unavailable');
       const data = await response.json();
+      try {
+        localStorage.removeItem('noelwish_checkout_pending');
+        localStorage.removeItem('noelwish_incomplete_surprise');
+      } catch {}
 
       const purchaseKey = 'noelwish_purchase_' + sessionId;
       if (!sessionStorage.getItem(purchaseKey)) {

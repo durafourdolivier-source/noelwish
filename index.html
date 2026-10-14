@@ -52,5 +52,5 @@ if(el.closest('#gifts')&&el.classList.contains('choice'))trackEvent('gift_theme_
 window.addEventListener('hashchange',()=>{const section=location.hash.slice(1);if(section==='wish')trackFunnel('wish','started',1);if(section==='gifts'){trackEvent('view_item_list',{list:'gifts'});trackFunnel('gift_catalog','viewed',1)}if(section==='give'){trackEvent('view_donation_options');trackFunnel('donation','options_viewed',1)}if(section==='result'&&S.wish?.id&&completedWish!==S.wish.id){completedWish=S.wish.id;trackEvent('wish_completed',{privacy:S.wish.privacy,wish_kind:S.wish.kind});trackFunnel('wish','completed',9,{privacy:S.wish.privacy,wish_kind:S.wish.kind})}});
 window.startDonation=(amount,button)=>{const flowId='dn_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7);trackEvent('donation_selected',{amount_tier:amount,flow_id:flowId});trackFunnel('donation','amount_selected',2,{amount_tier:amount,flow_id:flowId});return startCheckout('donation-'+amount,button,{analyticsFlowId:flowId})};
 })();
-</script><script src="/nw-events.js"></script><script src="/seo-links.js"></script></body></html>
+</script><script src="/nw-events.js"></script><script src="/seo-links.js"></script><script src="/conversion.js"></script></body></html>
 <!-- deployment refresh: 2026-10-12 -->
