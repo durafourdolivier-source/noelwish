@@ -89,6 +89,7 @@
       de:{locale:'de-DE',page:'Bestellung bestätigt — NoelWish',alt:'Der Weihnachtsmann bedankt sich herzlich',eyebrow:'Bestellung bestätigt',title:'Danke, die Magie ist unterwegs!',lead:'Deine Zahlung ist bestätigt. Der Weihnachtsmann übernimmt jetzt.',recipient:'Empfänger',delivery:'Versand',address:'Adresse',error:'Die Bestellung ist bestätigt, aber die Zusammenfassung kann gerade nicht angezeigt werden.',notice:'Der Brief kommt in wenigen Augenblicken. Bitte prüfe den Werbe- oder Spamordner.',another:'Eine weitere Überraschung erstellen',home:'Zur Startseite',soon:'In wenigen Augenblicken',chosen:'Am gewählten Datum',person:'Die ausgewählte Person',preparing:'Wird vorbereitet',saved:'Adresse gespeichert',donationEyebrow:'Beitrag bestätigt',donationTitle:'Danke für deine Unterstützung!',donationLead:a=>'Dein Beitrag von '+a+' hilft NoelWish, solidarische Geschenke vorzubereiten.',donationNotice:'Wir veröffentlichen einen transparenten Bericht über die gesammelten Mittel und ihre Verwendung. Dieser Beitrag ist nicht steuerlich absetzbar.',donationCta:'Solidaritätsprojekt entdecken',giftTitle:'Danke, deine Überraschung ist bestätigt!',giftLead:'Unsere Nordpol-Werkstatt bereitet deine Bestellung jetzt vor.',giftNotice:'Du erhältst alle wichtigen Informationen zur Verfolgung deiner Überraschung.',scheduled:'Der Brief wird automatisch zum gewählten Zeitpunkt gesendet. Du musst nichts weiter tun.'}
     };
     const copy = COPY[language];
+    const loadingText = {fr:'Chargement…',en:'Loading…',es:'Cargando…',pt:'A carregar…',de:'Wird geladen…'}[language];
     document.documentElement.lang = language;
     document.title = copy.page;
     document.querySelector('.santa').alt = copy.alt;
@@ -98,6 +99,9 @@
     document.querySelectorAll('.label')[0].textContent = copy.recipient;
     document.querySelectorAll('.label')[1].textContent = copy.delivery;
     document.querySelectorAll('.label')[2].textContent = copy.address;
+    document.getElementById('recipient').textContent = loadingText;
+    document.getElementById('delivery').textContent = loadingText;
+    document.getElementById('email').textContent = loadingText;
     document.getElementById('error').textContent = copy.error;
     document.getElementById('noticeText').textContent = copy.notice;
     document.querySelector('.btn.primary').textContent = copy.another;
