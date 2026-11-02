@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { upsertContact, validEmail, contactsConfigured } from './_supabase.js';
 
 export const config = {
   api: { bodyParser: false }
@@ -324,6 +325,36 @@ export default async function handler(req, res) {
   const product = metadata.noelwish_product;
   const recipientEmail = metadata.delivery_email;
   const purchaserEmail = session.customer_details?.email || recipientEmail;
+
+  if (contactsConfigured() && validEmail(purchaserEmail)) {
+    const shipping = session.collected_information?.shipping_details || session.shipping_details || {};
+    try {
+      await upsertContact({
+        email: purchaserEmail,
+        customerName: session.customer_details?.name,
+        recipientName: metadata.recipient,
+        senderName: metadata.sender,
+        phone: session.customer_details?.phone,
+        productId: product,
+        lifecycle: 'customer',
+        funnelStage: 'purchase_completed',
+        language,
+        market: metadata.market,
+        currency: session.currency,
+        source: 'stripe_checkout',
+        flowId: metadata.analytics_flow_id,
+        stripeSessionId: session.id,
+        stripeCustomerId: session.customer,
+        shippingCountry: shipping.address?.country,
+        shippingCity: shipping.address?.city,
+        totalSpentMinor: session.amount_total || 0,
+        purchasedAt: new Date((session.created || Math.floor(Date.now() / 1000)) * 1000).toISOString(),
+        metadata: { payment_status: session.payment_status }
+      });
+    } catch (error) {
+      console.error(JSON.stringify({ level: 'error', route: '/api/stripe-webhook', action: 'save_contact', message: error.message }));
+    }
+  }
 
   try {
     if (product === 'magic-letter' && recipientEmail) {
