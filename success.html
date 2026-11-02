@@ -81,22 +81,42 @@
     const language = ['fr','en','es','pt','de'].includes(params.get('lang')) ? params.get('lang') : 'fr';
     const market = /^[A-Z]{2}$/.test(params.get('market') || '') ? params.get('market') : 'FR';
     const localizedHome = '/?lang=' + encodeURIComponent(language) + '&market=' + encodeURIComponent(market);
+    const COPY = {
+      fr:{locale:'fr-FR',page:'Commande confirmée — NoelWish',alt:'Le Père Noël remercie chaleureusement',eyebrow:'Commande confirmée',title:'Merci, la magie est en route !',lead:'Ton paiement est confirmé. Le Père Noël prend maintenant le relais.',recipient:'Destinataire',delivery:'Envoi',address:'Adresse',error:'La commande est bien confirmée, mais son récapitulatif ne peut pas être affiché pour le moment.',notice:'La lettre arrivera dans quelques instants. Pense à vérifier l’onglet Promotions ou les courriers indésirables.',another:'Créer une autre surprise',home:'Retour à l’accueil',soon:'Dans quelques instants',chosen:'À la date choisie',person:'La personne choisie',preparing:'Préparation en cours',saved:'Adresse enregistrée',donationEyebrow:'Contribution confirmée',donationTitle:'Merci pour ton geste solidaire !',donationLead:a=>'Ta contribution de '+a+' aidera NoelWish à préparer des cadeaux solidaires.',donationNotice:'Un bilan transparent des sommes collectées et de leur utilisation sera publié. Cette contribution ne donne pas droit à un reçu fiscal.',donationCta:'Découvrir le projet solidaire',giftTitle:'Merci, ta surprise est confirmée !',giftLead:'Notre atelier du Pôle Nord va maintenant préparer ta commande.',giftNotice:'Tu recevras les informations utiles pour le suivi de ta surprise.',scheduled:'La lettre sera envoyée automatiquement au moment choisi. Tu n’as plus rien à faire.'},
+      en:{locale:'en-AU',page:'Order confirmed — NoelWish',alt:'Santa thanks you warmly',eyebrow:'Order confirmed',title:'Thank you, the magic is on its way!',lead:'Your payment is confirmed. Santa is taking it from here.',recipient:'Recipient',delivery:'Delivery',address:'Address',error:'Your order is confirmed, but its summary cannot be displayed right now.',notice:'The letter will arrive in a few moments. Please check Promotions or spam.',another:'Create another surprise',home:'Back to home',soon:'In a few moments',chosen:'On the selected date',person:'Your chosen recipient',preparing:'Being prepared',saved:'Address saved',donationEyebrow:'Contribution confirmed',donationTitle:'Thank you for your kindness!',donationLead:a=>'Your '+a+' contribution will help NoelWish prepare solidarity gifts.',donationNotice:'We will publish a transparent report on the funds collected and how they are used. This contribution is not tax-deductible.',donationCta:'Discover the solidarity project',giftTitle:'Thank you, your surprise is confirmed!',giftLead:'Our North Pole workshop will now prepare your order.',giftNotice:'You will receive the useful tracking information for your surprise.',scheduled:'The letter will be sent automatically at the selected time. There is nothing else to do.'},
+      es:{locale:'es-ES',page:'Pedido confirmado — NoelWish',alt:'Papá Noel te da las gracias',eyebrow:'Pedido confirmado',title:'¡Gracias, la magia está en camino!',lead:'Tu pago está confirmado. Papá Noel se encarga del resto.',recipient:'Destinatario',delivery:'Envío',address:'Dirección',error:'El pedido está confirmado, pero no podemos mostrar el resumen ahora mismo.',notice:'La carta llegará en unos instantes. Revisa Promociones o correo no deseado.',another:'Crear otra sorpresa',home:'Volver al inicio',soon:'En unos instantes',chosen:'En la fecha elegida',person:'La persona elegida',preparing:'En preparación',saved:'Dirección registrada',donationEyebrow:'Contribución confirmada',donationTitle:'¡Gracias por tu gesto solidario!',donationLead:a=>'Tu contribución de '+a+' ayudará a NoelWish a preparar regalos solidarios.',donationNotice:'Publicaremos un informe transparente sobre los fondos recaudados y su uso. Esta contribución no es deducible fiscalmente.',donationCta:'Descubrir el proyecto solidario',giftTitle:'¡Gracias, tu sorpresa está confirmada!',giftLead:'Nuestro taller del Polo Norte preparará ahora tu pedido.',giftNotice:'Recibirás la información útil para seguir tu sorpresa.',scheduled:'La carta se enviará automáticamente en el momento elegido. No tienes que hacer nada más.'},
+      pt:{locale:'pt-PT',page:'Pedido confirmado — NoelWish',alt:'O Pai Natal agradece calorosamente',eyebrow:'Pedido confirmado',title:'Obrigado, a magia está a caminho!',lead:'O pagamento foi confirmado. O Pai Natal trata agora do resto.',recipient:'Destinatário',delivery:'Envio',address:'Endereço',error:'O pedido está confirmado, mas não é possível mostrar o resumo neste momento.',notice:'A carta chegará dentro de instantes. Verifique Promoções ou spam.',another:'Criar outra surpresa',home:'Voltar ao início',soon:'Dentro de instantes',chosen:'Na data escolhida',person:'A pessoa escolhida',preparing:'Em preparação',saved:'Endereço registado',donationEyebrow:'Contribuição confirmada',donationTitle:'Obrigado pelo seu gesto solidário!',donationLead:a=>'A sua contribuição de '+a+' ajudará a NoelWish a preparar presentes solidários.',donationNotice:'Publicaremos um relatório transparente sobre os valores arrecadados e a sua utilização. Esta contribuição não é dedutível.',donationCta:'Descobrir o projeto solidário',giftTitle:'Obrigado, a sua surpresa está confirmada!',giftLead:'A nossa oficina do Polo Norte vai agora preparar o seu pedido.',giftNotice:'Receberá as informações úteis para acompanhar a surpresa.',scheduled:'A carta será enviada automaticamente no momento escolhido. Não precisa fazer mais nada.'},
+      de:{locale:'de-DE',page:'Bestellung bestätigt — NoelWish',alt:'Der Weihnachtsmann bedankt sich herzlich',eyebrow:'Bestellung bestätigt',title:'Danke, die Magie ist unterwegs!',lead:'Deine Zahlung ist bestätigt. Der Weihnachtsmann übernimmt jetzt.',recipient:'Empfänger',delivery:'Versand',address:'Adresse',error:'Die Bestellung ist bestätigt, aber die Zusammenfassung kann gerade nicht angezeigt werden.',notice:'Der Brief kommt in wenigen Augenblicken. Bitte prüfe den Werbe- oder Spamordner.',another:'Eine weitere Überraschung erstellen',home:'Zur Startseite',soon:'In wenigen Augenblicken',chosen:'Am gewählten Datum',person:'Die ausgewählte Person',preparing:'Wird vorbereitet',saved:'Adresse gespeichert',donationEyebrow:'Beitrag bestätigt',donationTitle:'Danke für deine Unterstützung!',donationLead:a=>'Dein Beitrag von '+a+' hilft NoelWish, solidarische Geschenke vorzubereiten.',donationNotice:'Wir veröffentlichen einen transparenten Bericht über die gesammelten Mittel und ihre Verwendung. Dieser Beitrag ist nicht steuerlich absetzbar.',donationCta:'Solidaritätsprojekt entdecken',giftTitle:'Danke, deine Überraschung ist bestätigt!',giftLead:'Unsere Nordpol-Werkstatt bereitet deine Bestellung jetzt vor.',giftNotice:'Du erhältst alle wichtigen Informationen zur Verfolgung deiner Überraschung.',scheduled:'Der Brief wird automatisch zum gewählten Zeitpunkt gesendet. Du musst nichts weiter tun.'}
+    };
+    const copy = COPY[language];
     document.documentElement.lang = language;
+    document.title = copy.page;
+    document.querySelector('.santa').alt = copy.alt;
+    document.querySelector('.eyebrow').textContent = copy.eyebrow;
+    document.getElementById('title').textContent = copy.title;
+    document.getElementById('lead').textContent = copy.lead;
+    document.querySelectorAll('.label')[0].textContent = copy.recipient;
+    document.querySelectorAll('.label')[1].textContent = copy.delivery;
+    document.querySelectorAll('.label')[2].textContent = copy.address;
+    document.getElementById('error').textContent = copy.error;
+    document.getElementById('noticeText').textContent = copy.notice;
+    document.querySelector('.btn.primary').textContent = copy.another;
+    document.querySelector('.btn.secondary').textContent = copy.home;
     document.querySelector('.btn.primary').href = localizedHome + '#gifts';
     document.querySelector('.btn.secondary').href = localizedHome + '#home';
 
     function formatDelivery(data) {
-      if (data.deliveryMode !== 'scheduled' || !data.deliveryAt) return 'Dans quelques instants';
+      if (data.deliveryMode !== 'scheduled' || !data.deliveryAt) return copy.soon;
       const date = new Date(data.deliveryAt);
-      if (Number.isNaN(date.getTime())) return 'À la date choisie';
+      if (Number.isNaN(date.getTime())) return copy.chosen;
       try {
-        return new Intl.DateTimeFormat('fr-FR', {
+        return new Intl.DateTimeFormat(copy.locale, {
           dateStyle: 'long',
           timeStyle: 'short',
           timeZone: data.deliveryTimezone || undefined
         }).format(date);
       } catch {
-        return new Intl.DateTimeFormat('fr-FR', {dateStyle:'long',timeStyle:'short'}).format(date);
+        return new Intl.DateTimeFormat(copy.locale, {dateStyle:'long',timeStyle:'short'}).format(date);
       }
     }
 
@@ -139,25 +159,25 @@
 
       const isLetter = data.product === 'magic-letter';
       const isDonation = String(data.product || '').startsWith('donation-');
-      document.getElementById('recipient').textContent = data.recipient || 'La personne choisie';
-      document.getElementById('delivery').textContent = isLetter ? formatDelivery(data) : 'Préparation en cours';
-      document.getElementById('email').textContent = data.deliveryEmail || 'Adresse enregistrée';
+      document.getElementById('recipient').textContent = data.recipient || copy.person;
+      document.getElementById('delivery').textContent = isLetter ? formatDelivery(data) : copy.preparing;
+      document.getElementById('email').textContent = data.deliveryEmail || copy.saved;
 
       if (isDonation) {
-        const amount = new Intl.NumberFormat('fr-FR', {style:'currency',currency:String(data.currency || 'EUR').toUpperCase()}).format((data.amount || 0) / 100);
-        document.querySelector('.eyebrow').textContent = 'Contribution confirmée';
-        document.getElementById('title').textContent = 'Merci pour ton geste solidaire !';
-        document.getElementById('lead').textContent = 'Ta contribution de ' + amount + ' aidera NoelWish à préparer des cadeaux solidaires.';
+        const amount = new Intl.NumberFormat(copy.locale, {style:'currency',currency:String(data.currency || 'EUR').toUpperCase()}).format((data.amount || 0) / 100);
+        document.querySelector('.eyebrow').textContent = copy.donationEyebrow;
+        document.getElementById('title').textContent = copy.donationTitle;
+        document.getElementById('lead').textContent = copy.donationLead(amount);
         document.getElementById('details').style.display = 'none';
-        document.getElementById('noticeText').textContent = 'Un bilan transparent des sommes collectées et de leur utilisation sera publié. Cette contribution ne donne pas droit à un reçu fiscal.';
-        document.querySelector('.btn.primary').textContent = 'Découvrir le projet solidaire';
+        document.getElementById('noticeText').textContent = copy.donationNotice;
+        document.querySelector('.btn.primary').textContent = copy.donationCta;
         document.querySelector('.btn.primary').href = localizedHome + '#give';
       } else if (!isLetter) {
-        document.getElementById('title').textContent = 'Merci, ta surprise est confirmée !';
-        document.getElementById('lead').textContent = 'Notre atelier du Pôle Nord va maintenant préparer ta commande.';
-        document.getElementById('noticeText').textContent = 'Tu recevras les informations utiles pour le suivi de ta surprise.';
+        document.getElementById('title').textContent = copy.giftTitle;
+        document.getElementById('lead').textContent = copy.giftLead;
+        document.getElementById('noticeText').textContent = copy.giftNotice;
       } else if (data.deliveryMode === 'scheduled') {
-        document.getElementById('noticeText').textContent = 'La lettre sera envoyée automatiquement au moment choisi. Tu n’as plus rien à faire.';
+        document.getElementById('noticeText').textContent = copy.scheduled;
       }
     }
 
