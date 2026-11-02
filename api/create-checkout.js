@@ -112,9 +112,27 @@ const MARKET_CONFIG = {
   PT: { currency: 'eur', country: 'PT', shipping: 900 }
 };
 
+function validEmail(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim()); }
+async function saveLead(body) {
+  const url = String(process.env.SUPABASE_URL || '').replace(/\/$/, '');
+  const key = String(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+  if (!url || !key) throw new Error('Contact storage unavailable');
+  const email = String(body.email || '').trim().toLowerCase();
+  if (!validEmail(email)) throw new Error('Invalid email');
+  const clean = (value, max = 160) => String(value || '').trim().slice(0, max) || null;
+  const record = {email,recipient_name:clean(body.recipientName),sender_name:clean(body.senderName),product_id:clean(body.productId,80),lifecycle:'lead',funnel_stage:clean(body.funnelStage,80)||'email_captured',language:clean(body.language,8),market:clean(body.market,8),currency:clean(body.currency,8),source:'gift_personalization',flow_id:clean(body.flowId,120),last_seen_at:new Date().toISOString(),metadata:{delivery_mode:clean(body.deliveryMode,40)}};
+  Object.keys(record).forEach(name=>record[name]===null&&delete record[name]);
+  const response = await fetch(url + '/rest/v1/noelwish_contacts?on_conflict=email_normalized', {method:'POST',headers:{apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(record)});
+  if (!response.ok) throw new Error('Contact storage failed');
+}
+
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.body?.action === 'capture_lead') {
+    try { await saveLead(req.body); return res.status(200).json({ saved: true }); }
+    catch (error) { console.error(JSON.stringify({level:'error',route:'/api/create-checkout',action:'capture_lead',message:error.message})); return res.status(502).json({ error: 'Contact storage failed' }); }
+  }
   if (!process.env.STRIPE_SECRET_KEY) return res.status(503).json({ error: 'Stripe is not configured' });
 
   const productId = req.body?.product;

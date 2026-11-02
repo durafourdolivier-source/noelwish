@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { upsertContact, validEmail, contactsConfigured } from './_supabase.js';
 
 export const config = {
   api: { bodyParser: false }
@@ -300,6 +299,18 @@ function futureDeliveryDate(value) {
   return delay > 10 * 60 * 1000 && delay <= 30 * 24 * 60 * 60 * 1000
     ? date.toISOString()
     : undefined;
+}
+
+function contactsConfigured() { return Boolean(process.env.SUPABASE_URL && (process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY)); }
+function validEmail(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim()); }
+async function upsertContact(input) {
+  const url = String(process.env.SUPABASE_URL || '').replace(/\/$/, '');
+  const key = String(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+  const clean = (value, max = 160) => String(value || '').trim().slice(0, max) || null;
+  const record = {email:String(input.email).trim().toLowerCase(),customer_name:clean(input.customerName),recipient_name:clean(input.recipientName),sender_name:clean(input.senderName),phone:clean(input.phone,40),product_id:clean(input.productId,80),lifecycle:'customer',funnel_stage:'purchase_completed',language:clean(input.language,8),market:clean(input.market,8),currency:clean(input.currency,8),source:'stripe_checkout',flow_id:clean(input.flowId,120),stripe_session_id:clean(input.stripeSessionId,180),stripe_customer_id:clean(input.stripeCustomerId,180),shipping_country:clean(input.shippingCountry,8),shipping_city:clean(input.shippingCity,120),order_count:1,total_spent_minor:Math.max(0,Number(input.totalSpentMinor||0)),last_seen_at:new Date().toISOString(),purchased_at:input.purchasedAt,metadata:input.metadata||{}};
+  Object.keys(record).forEach(name=>record[name]===null&&delete record[name]);
+  const response = await fetch(url + '/rest/v1/noelwish_contacts?on_conflict=email_normalized',{method:'POST',headers:{apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(record)});
+  if (!response.ok) throw new Error('Contact storage failed');
 }
 
 export default async function handler(req, res) {

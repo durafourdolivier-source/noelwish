@@ -55,6 +55,16 @@ async function stripeRequest(path, options = {}) {
   return payload;
 }
 
+async function contactsRequest() {
+  const url = String(process.env.SUPABASE_URL || '').replace(/\/$/, '');
+  const key = String(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+  if (!url || !key) return { contacts: [], configured: false };
+  const fields = 'id,email,customer_name,recipient_name,sender_name,phone,product_id,lifecycle,funnel_stage,language,market,currency,source,flow_id,stripe_session_id,stripe_customer_id,shipping_country,shipping_city,order_count,total_spent_minor,first_seen_at,last_seen_at,purchased_at';
+  const response = await fetch(url + '/rest/v1/noelwish_contacts?select=' + fields + '&order=last_seen_at.desc&limit=1000', {headers:{apikey:key,Authorization:'Bearer '+key}});
+  if (!response.ok) throw new Error('Impossible de charger les contacts');
+  return { contacts: await response.json(), configured: true };
+}
+
 
 const SHIPPING_COPY = {
   fr: {
@@ -214,7 +224,7 @@ module.exports = async function handler(req, res) {
     if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
     const params = new URLSearchParams({ limit: '100', status: 'complete' });
-    const payload = await stripeRequest(`/checkout/sessions?${params}`);
+    const [payload, contactData] = await Promise.all([stripeRequest(`/checkout/sessions?${params}`), contactsRequest()]);
     const orders = (payload.data || []).map(session => {
       const metadata = session.metadata || {};
       const productId = metadata.noelwish_product || '';
@@ -251,7 +261,7 @@ module.exports = async function handler(req, res) {
         livemode: Boolean(session.livemode)
       };
     });
-    return res.status(200).json({ orders, hasMore: Boolean(payload.has_more) });
+    return res.status(200).json({ orders, contacts: contactData.contacts, contactsConfigured: contactData.configured, hasMore: Boolean(payload.has_more) });
   } catch (error) {
     console.error(JSON.stringify({ level: 'error', route: '/api/admin-orders', message: error.message }));
     return res.status(502).json({ error: error.message || 'Impossible de gérer les commandes' });

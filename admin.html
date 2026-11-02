@@ -72,9 +72,8 @@ function openOrder(id){
  byId('editStatus').value=current.status;byId('editTracking').value=current.tracking||'';byId('editNote').value=current.note||'';byId('copyAddress').classList.toggle('hide',!current.shippingAddress);byId('resendShipping').classList.toggle('hide',!(['santa-surprise','big-christmas-box'].includes(current.productId)&&current.tracking));byId('modal').classList.remove('hide');
 }
 async function api(options={}){const r=await fetch('/api/admin-orders',{...options,headers:{Authorization:'Bearer '+secret,'Content-Type':'application/json',...(options.headers||{})}});const data=await r.json();if(!r.ok)throw new Error(data.error||'Erreur');return data}
-async function contactsApi(){const r=await fetch('/api/admin-contacts',{headers:{Authorization:'Bearer '+secret}});const data=await r.json();if(r.status===503)return {contacts:[],unavailable:true};if(!r.ok)throw new Error(data.error||'Erreur');return data}
 async function load(){
- const [data,contactsData]=await Promise.all([api(),contactsApi()]);allOrders=data.orders||[];allContacts=contactsData.contacts||[];updateStats();updateContactStats();render();renderContacts();byId('lastUpdate').textContent='Dernière actualisation : '+new Date().toLocaleTimeString('fr-FR')+(data.hasMore?' · Affichage limité aux 100 dernières commandes':'');
+ const data=await api();allOrders=data.orders||[];allContacts=data.contacts||[];updateStats();updateContactStats();render();renderContacts();byId('lastUpdate').textContent='Dernière actualisation : '+new Date().toLocaleTimeString('fr-FR')+(data.hasMore?' · Affichage limité aux 100 dernières commandes':'')+(data.contactsConfigured?'':' · Base clients à connecter');
 }
 async function save(){
  if(!current)return;byId('save').disabled=true;
