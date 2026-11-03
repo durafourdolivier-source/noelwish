@@ -100,7 +100,34 @@ function render(key, lang) {
     {'@type':'FAQPage',mainEntity:t.faq.map(([q,a])=>({'@type':'Question',name:q,acceptedAnswer:{'@type':'Answer',text:a}}))}
   ];
   const productPrices = {'magic-letter':'1.99','santa-surprise':'29.00','big-christmas-box':'69.00'};
-  if (page.product) graph.push({'@type':'Product',name:t.h1,description:t.description,image:`${origin}${page.image}`,brand:{'@type':'Brand',name:'NoelWish'},offers:{'@type':'Offer',url:urlFor(key,lang),priceCurrency:'EUR',price:productPrices[page.product],availability:'https://schema.org/InStock'}});
+  const marketCountry = {fr:'FR',en:'US',es:'ES',pt:'PT',de:'DE'}[lang];
+  if (page.product) {
+    const isDigital = page.product === 'magic-letter';
+    graph.push({
+      '@type':'Product',
+      name:t.h1,
+      description:t.description,
+      image:`${origin}${page.image}`,
+      brand:{'@type':'Brand',name:'NoelWish'},
+      offers:{
+        '@type':'Offer',
+        url:urlFor(key,lang),
+        priceCurrency:'EUR',
+        price:productPrices[page.product],
+        availability:'https://schema.org/InStock',
+        shippingDetails:{
+          '@type':'OfferShippingDetails',
+          shippingDestination:{'@type':'DefinedRegion',addressCountry:marketCountry},
+          shippingRate:{'@type':'MonetaryAmount',value:isDigital?'0.00':'9.00',currency:'EUR'}
+        },
+        hasMerchantReturnPolicy:{
+          '@type':'MerchantReturnPolicy',
+          applicableCountry:marketCountry,
+          returnPolicyCategory:'https://schema.org/MerchantReturnNotPermitted'
+        }
+      }
+    });
+  }
   const schema = {'@context':'https://schema.org','@graph':graph};
   return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#690b16"><title>${esc(t.title)}</title><meta name="description" content="${esc(t.description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${urlFor(key,lang)}">${alternates}<meta property="og:type" content="website"><meta property="og:site_name" content="NoelWish"><meta property="og:title" content="${esc(t.title)}"><meta property="og:description" content="${esc(t.description)}"><meta property="og:url" content="${urlFor(key,lang)}"><meta property="og:image" content="${origin}${page.image}"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">${JSON.stringify(schema).replace(/</g,'\\u003c')}</script><style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
