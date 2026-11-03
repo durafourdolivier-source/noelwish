@@ -111,9 +111,41 @@ const ideaSteps = {
   ],
 };
 
+const giftSteps = {
+  fr: [
+    { title: 'Choisissez l’émotion que vous voulez créer', detail: 'Une lettre pour toucher immédiatement, une Santa Surprise pour étonner ou une grande box pour marquer le coup.' },
+    { title: 'Donnez-nous les indices qui la rendent unique', detail: 'Ses passions, ses couleurs préférées, ses petites habitudes et ce qu’elle n’aime pas nous aident à viser juste.' },
+    { title: 'Terminez avec des mots qui viennent de vous', detail: 'Ajoutez votre message personnel : NoelWish s’occupe ensuite de donner vie à votre surprise.' },
+  ],
+  en: [
+    { title: 'Choose the feeling you want to create', detail: 'A letter for an instant emotional moment, a Santa Surprise to delight them or a big box to make it unforgettable.' },
+    { title: 'Give us the clues that make them unique', detail: 'Their interests, favourite colours, little habits and dislikes help us create something that truly fits them.' },
+    { title: 'Finish with words that come from you', detail: 'Add your personal message, then NoelWish takes care of bringing your surprise to life.' },
+  ],
+  es: [
+    { title: 'Elige la emoción que quieres crear', detail: 'Una carta para emocionar al instante, una Santa Surprise para sorprender o una gran caja para hacerlo inolvidable.' },
+    { title: 'Danos las pistas que hacen única a esa persona', detail: 'Sus pasiones, colores favoritos, pequeñas costumbres y lo que no le gusta nos ayudan a acertar.' },
+    { title: 'Termina con palabras que salgan de ti', detail: 'Añade tu mensaje personal y NoelWish se encarga de dar vida a la sorpresa.' },
+  ],
+  pt: [
+    { title: 'Escolha a emoção que você quer criar', detail: 'Uma carta para emocionar na hora, uma Santa Surprise para encantar ou uma grande caixa para tornar o momento inesquecível.' },
+    { title: 'Conte o que torna essa pessoa única', detail: 'Paixões, cores favoritas, pequenos hábitos e o que ela não gosta nos ajudam a acertar no presente.' },
+    { title: 'Finalize com palavras que vêm de você', detail: 'Adicione sua mensagem pessoal e a NoelWish cuida de dar vida à surpresa.' },
+  ],
+  de: [
+    { title: 'Wähle das Gefühl, das du auslösen möchtest', detail: 'Ein Brief für einen emotionalen Moment, eine Santa Surprise zum Staunen oder eine große Box für ein unvergessliches Erlebnis.' },
+    { title: 'Verrate uns, was diese Person einzigartig macht', detail: 'Interessen, Lieblingsfarben, kleine Gewohnheiten und Abneigungen helfen uns, genau das Richtige zu gestalten.' },
+    { title: 'Schließe mit deinen eigenen Worten ab', detail: 'Füge deine persönliche Nachricht hinzu und NoelWish erweckt deine Überraschung zum Leben.' },
+  ],
+};
+
 function render(key, lang) {
   const page = pages[key], t = page.text[lang], ui = languages[lang];
-  const steps = key === 'ideas' ? ideaSteps[lang] : t.steps.map(title => ({ title, detail: ui.guide }));
+  const steps = key === 'ideas'
+    ? ideaSteps[lang]
+    : key === 'gift'
+      ? giftSteps[lang]
+      : t.steps.map(title => ({ title, detail: ui.guide }));
   const alternates = Object.keys(languages).map(l => `<link rel="alternate" hreflang="${l}" href="${urlFor(key,l)}">`).join('') + `<link rel="alternate" hreflang="x-default" href="${urlFor(key,'en')}">`;
   const faqs = t.faq.map(([q,a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('');
   const related = Object.keys(pages).filter(k=>k!==key).map(k=>`<a class="related" href="/${lang}/${pages[k].slugs[lang]}"><span>${pages[k].icon}</span>${esc(pages[k].text[lang].h1.split(':')[0])}</a>`).join('');
