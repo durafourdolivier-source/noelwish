@@ -139,13 +139,43 @@ const giftSteps = {
   ],
 };
 
+const letterSteps = {
+  fr: [
+    { title: 'Faites entrer le destinataire dans l’histoire', detail: 'Son prénom et quelques détails personnels suffisent pour que la lettre semble avoir été écrite rien que pour lui.' },
+    { title: 'Donnez au Père Noël de quoi le surprendre', detail: 'Choisissez le ton et glissez un souvenir, une qualité ou un petit secret que le Père Noël pourra évoquer.' },
+    { title: 'Choisissez quand la magie doit arriver', detail: 'Envoyez la lettre immédiatement ou programmez-la pour le moment parfait : la veille de Noël, un anniversaire ou une surprise.' },
+  ],
+  en: [
+    { title: 'Make the recipient part of the story', detail: 'Their name and a few personal details are enough to make the letter feel as though Santa wrote it just for them.' },
+    { title: 'Give Santa something to surprise them with', detail: 'Choose the tone and add a memory, a special quality or a little secret Santa can mention.' },
+    { title: 'Choose when the magic should arrive', detail: 'Send the letter immediately or schedule it for the perfect moment: Christmas Eve, a birthday or a surprise.' },
+  ],
+  es: [
+    { title: 'Haz que el destinatario forme parte de la historia', detail: 'Su nombre y algunos detalles personales bastan para que parezca que Papá Noel escribió la carta solo para esa persona.' },
+    { title: 'Dale a Papá Noel algo con lo que sorprender', detail: 'Elige el tono y añade un recuerdo, una cualidad o un pequeño secreto que Papá Noel pueda mencionar.' },
+    { title: 'Elige cuándo debe llegar la magia', detail: 'Envía la carta al instante o prográmala para el momento perfecto: Nochebuena, un cumpleaños o una sorpresa.' },
+  ],
+  pt: [
+    { title: 'Faça o destinatário entrar na história', detail: 'O nome e alguns detalhes pessoais bastam para parecer que o Papai Noel escreveu a carta especialmente para essa pessoa.' },
+    { title: 'Dê ao Papai Noel algo para surpreender', detail: 'Escolha o tom e acrescente uma lembrança, uma qualidade ou um pequeno segredo que o Papai Noel possa mencionar.' },
+    { title: 'Escolha quando a magia deve chegar', detail: 'Envie a carta na hora ou agende para o momento perfeito: véspera de Natal, aniversário ou uma surpresa.' },
+  ],
+  de: [
+    { title: 'Mach den Empfänger zum Teil der Geschichte', detail: 'Der Name und ein paar persönliche Details genügen, damit es wirkt, als hätte der Weihnachtsmann den Brief nur für diese Person geschrieben.' },
+    { title: 'Gib dem Weihnachtsmann etwas zum Überraschen', detail: 'Wähle den Ton und ergänze eine Erinnerung, eine besondere Eigenschaft oder ein kleines Geheimnis, das er erwähnen kann.' },
+    { title: 'Bestimme, wann der Zauber ankommen soll', detail: 'Sende den Brief sofort oder plane ihn für den perfekten Moment: Heiligabend, einen Geburtstag oder eine Überraschung.' },
+  ],
+};
+
 function render(key, lang) {
   const page = pages[key], t = page.text[lang], ui = languages[lang];
   const steps = key === 'ideas'
     ? ideaSteps[lang]
     : key === 'gift'
       ? giftSteps[lang]
-      : t.steps.map(title => ({ title, detail: ui.guide }));
+      : key === 'letter'
+        ? letterSteps[lang]
+        : t.steps.map(title => ({ title, detail: ui.guide }));
   const alternates = Object.keys(languages).map(l => `<link rel="alternate" hreflang="${l}" href="${urlFor(key,l)}">`).join('') + `<link rel="alternate" hreflang="x-default" href="${urlFor(key,'en')}">`;
   const faqs = t.faq.map(([q,a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('');
   const related = Object.keys(pages).filter(k=>k!==key).map(k=>`<a class="related" href="/${lang}/${pages[k].slugs[lang]}"><span>${pages[k].icon}</span>${esc(pages[k].text[lang].h1.split(':')[0])}</a>`).join('');
