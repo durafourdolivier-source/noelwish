@@ -120,7 +120,7 @@ async function saveLead(body) {
   const email = String(body.email || '').trim().toLowerCase();
   if (!validEmail(email)) throw new Error('Invalid email');
   const clean = (value, max = 160) => String(value || '').trim().slice(0, max) || null;
-  const record = {email,recipient_name:clean(body.recipientName),sender_name:clean(body.senderName),product_id:clean(body.productId,80),lifecycle:'lead',funnel_stage:clean(body.funnelStage,80)||'email_captured',language:clean(body.language,8),market:clean(body.market,8),currency:clean(body.currency,8),source:'gift_personalization',flow_id:clean(body.flowId,120),last_seen_at:new Date().toISOString(),metadata:{delivery_mode:clean(body.deliveryMode,40)}};
+  const record = {email,recipient_name:clean(body.recipientName),sender_name:clean(body.senderName),product_id:clean(body.productId,80),lifecycle:'lead',funnel_stage:clean(body.funnelStage,80)||'email_captured',language:clean(body.language,8),market:clean(body.market,8),currency:clean(body.currency,8),source:'gift_personalization',flow_id:clean(body.flowId,120),last_seen_at:new Date().toISOString(),metadata:{delivery_mode:clean(body.deliveryMode,40),recipient_email:clean(body.recipientEmail,254)}};
   Object.keys(record).forEach(name=>record[name]===null&&delete record[name]);
   const response = await fetch(url + '/rest/v1/noelwish_contacts?on_conflict=email_normalized', {method:'POST',headers:{apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(record)});
   if (!response.ok) throw new Error('Contact storage failed');
@@ -168,9 +168,11 @@ module.exports = async function handler(req, res) {
   params.set('metadata[currency]', currency);
   params.set('metadata[language]', language);
   const details = req.body?.personalization || {};
+  if (validEmail(details.senderEmail)) params.set('customer_email', String(details.senderEmail).trim().toLowerCase());
   const metadata = {
     recipient: details.name,
     delivery_email: details.email,
+    sender_email: details.senderEmail,
     sender: details.sender,
     theme: details.choice,
     delivery_date: details.date,

@@ -54,7 +54,7 @@ const EMAIL_COPY = {
     confirmationSubject: 'Ta commande NoelWish est confirmée 🎄', confirmationTitle: 'Commande confirmée 🎄',
     recipientFallback: 'le destinataire',
     confirmationLead: (product, recipient) => `Merci ! Le paiement de ta <strong>${product}</strong> pour <strong>${recipient}</strong> a bien été reçu.`,
-    confirmationNext: 'Notre atelier prépare maintenant la surprise. Tu recevras directement les informations utiles à cette adresse.',
+    confirmationNext: 'Notre atelier prépare maintenant la surprise sous 7 jours ouvrés avant son expédition. Tu recevras ensuite le suivi directement à cette adresse.',
     donationSubject: 'Merci pour ton geste solidaire ❤️', donationLabel: 'NOELWISH · PROJET SOLIDAIRE',
     donationTitle: 'Merci pour ton geste ❤️', donationConfirmed: amount => `Ta contribution de <strong>${amount}</strong> est bien confirmée.`,
     donationHelp: 'Elle aidera NoelWish à acheter et préparer des cadeaux solidaires. Nous publierons un bilan transparent des sommes collectées et de leur utilisation.',
@@ -76,7 +76,7 @@ const EMAIL_COPY = {
     confirmationSubject: 'Your NoelWish order is confirmed 🎄', confirmationTitle: 'Order confirmed 🎄',
     recipientFallback: 'the recipient',
     confirmationLead: (product, recipient) => `Thank you! Payment for your <strong>${product}</strong> for <strong>${recipient}</strong> has been received.`,
-    confirmationNext: 'Our workshop is now preparing the surprise. We will send all useful information directly to this email address.',
+    confirmationNext: 'Our workshop will prepare the surprise within 7 business days before dispatch. Tracking will then be sent directly to this email address.',
     donationSubject: 'Thank you for your generous gesture ❤️', donationLabel: 'NOELWISH · SOLIDARITY PROJECT',
     donationTitle: 'Thank you for your kindness ❤️', donationConfirmed: amount => `Your contribution of <strong>${amount}</strong> is confirmed.`,
     donationHelp: 'It will help NoelWish purchase and prepare solidarity gifts. We will publish a transparent report on the funds collected and how they are used.',
@@ -98,7 +98,7 @@ const EMAIL_COPY = {
     confirmationSubject: 'Tu pedido NoelWish está confirmado 🎄', confirmationTitle: 'Pedido confirmado 🎄',
     recipientFallback: 'el destinatario',
     confirmationLead: (product, recipient) => `¡Gracias! Hemos recibido el pago de tu <strong>${product}</strong> para <strong>${recipient}</strong>.`,
-    confirmationNext: 'Nuestro taller ya está preparando la sorpresa. Recibirás toda la información necesaria directamente en este correo.',
+    confirmationNext: 'Nuestro taller preparará la sorpresa en un plazo de 7 días laborables antes del envío. Después recibirás el seguimiento directamente en este correo.',
     donationSubject: 'Gracias por tu gesto solidario ❤️', donationLabel: 'NOELWISH · PROYECTO SOLIDARIO',
     donationTitle: 'Gracias por tu generosidad ❤️', donationConfirmed: amount => `Tu contribución de <strong>${amount}</strong> está confirmada.`,
     donationHelp: 'Ayudará a NoelWish a comprar y preparar regalos solidarios. Publicaremos un informe transparente sobre los fondos recaudados y su utilización.',
@@ -120,7 +120,7 @@ const EMAIL_COPY = {
     confirmationSubject: 'O seu pedido NoelWish está confirmado 🎄', confirmationTitle: 'Pedido confirmado 🎄',
     recipientFallback: 'o destinatário',
     confirmationLead: (product, recipient) => `Obrigado! O pagamento da sua <strong>${product}</strong> para <strong>${recipient}</strong> foi recebido.`,
-    confirmationNext: 'A nossa oficina está preparando a surpresa. Todas as informações úteis serão enviadas diretamente para este e-mail.',
+    confirmationNext: 'A nossa oficina preparará a surpresa em até 7 dias úteis antes do envio. Depois, o rastreamento será enviado diretamente para este e-mail.',
     donationSubject: 'Obrigado pelo seu gesto solidário ❤️', donationLabel: 'NOELWISH · PROJETO SOLIDÁRIO',
     donationTitle: 'Obrigado pela sua generosidade ❤️', donationConfirmed: amount => `A sua contribuição de <strong>${amount}</strong> está confirmada.`,
     donationHelp: 'Ela ajudará a NoelWish a comprar e preparar presentes solidários. Publicaremos um relatório transparente sobre os valores arrecadados e a sua utilização.',
@@ -142,7 +142,7 @@ const EMAIL_COPY = {
     confirmationSubject: 'Deine NoelWish-Bestellung ist bestätigt 🎄', confirmationTitle: 'Bestellung bestätigt 🎄',
     recipientFallback: 'die beschenkte Person',
     confirmationLead: (product, recipient) => `Vielen Dank! Die Zahlung für deine <strong>${product}</strong> für <strong>${recipient}</strong> ist eingegangen.`,
-    confirmationNext: 'Unsere Werkstatt bereitet die Überraschung jetzt vor. Alle wichtigen Informationen erhältst du direkt an diese E-Mail-Adresse.',
+    confirmationNext: 'Unsere Werkstatt bereitet die Überraschung innerhalb von 7 Werktagen vor dem Versand vor. Danach erhältst du die Sendungsverfolgung direkt an diese E-Mail-Adresse.',
     donationSubject: 'Danke für deine solidarische Geste ❤️', donationLabel: 'NOELWISH · SOLIDARITÄTSPROJEKT',
     donationTitle: 'Danke für deine Unterstützung ❤️', donationConfirmed: amount => `Dein Beitrag von <strong>${amount}</strong> ist bestätigt.`,
     donationHelp: 'Damit hilft NoelWish, solidarische Geschenke zu kaufen und vorzubereiten. Wir veröffentlichen einen transparenten Bericht über die gesammelten Mittel und ihre Verwendung.',
@@ -264,13 +264,26 @@ function confirmationHtml(metadata, product, language) {
   return `<!doctype html><html lang="${language}"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="display:none;max-height:0;overflow:hidden">${copy.confirmationTitle}</div><table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr><td align="center" style="padding:24px 10px"><table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width:600px;background:#fffaf3;border:1px solid #ead6b6;border-radius:20px;overflow:hidden"><tr><td><img src="https://www.noelwish.com/api/gift-workshop-image" width="600" alt="${copy.giftImageAlt}" style="display:block;width:100%;max-width:600px;height:auto;border:0"></td></tr><tr><td style="padding:34px;font-size:16px;line-height:1.65"><h1 style="margin:0 0 22px;color:#7b0d1b;font-family:Georgia,'Times New Roman',serif;font-size:29px">${copy.confirmationTitle}</h1><p style="margin:0 0 18px">${copy.confirmationLead(productName, recipient)}</p><p style="margin:0 0 24px">${copy.confirmationNext}</p><p style="margin:0;color:#7b0d1b;font-weight:bold">${copy.team}</p></td></tr></table></td></tr></table></body></html>`;
 }
 
+function letterConfirmationHtml(metadata, language) {
+  const copy = EMAIL_COPY[language];
+  const recipient = escapeHtml(metadata.recipient || copy.recipientFallback);
+  const next = {
+    fr: `La lettre pour <strong>${recipient}</strong> sera envoyée à l’adresse du destinataire ${metadata.delivery_mode === 'scheduled' ? 'à la date choisie' : 'dans quelques instants'}.`,
+    en: `The letter for <strong>${recipient}</strong> will be sent to the recipient’s address ${metadata.delivery_mode === 'scheduled' ? 'at the selected time' : 'in a few moments'}.`,
+    es: `La carta para <strong>${recipient}</strong> se enviará a la dirección del destinatario ${metadata.delivery_mode === 'scheduled' ? 'en la fecha elegida' : 'en unos instantes'}.`,
+    pt: `A carta para <strong>${recipient}</strong> será enviada para o endereço do destinatário ${metadata.delivery_mode === 'scheduled' ? 'na data escolhida' : 'dentro de instantes'}.`,
+    de: `Der Brief für <strong>${recipient}</strong> wird ${metadata.delivery_mode === 'scheduled' ? 'zum gewählten Zeitpunkt' : 'in wenigen Augenblicken'} an die E-Mail-Adresse des Empfängers gesendet.`
+  }[language];
+  return `<!doctype html><html lang="${language}"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border:1px solid #ead6b6;border-radius:20px;overflow:hidden"><div style="padding:34px"><h1 style="margin:0 0 22px;color:#7b0d1b;font-family:Georgia,'Times New Roman',serif;font-size:29px">${copy.confirmationTitle}</h1><p style="font-size:16px;line-height:1.65">${next}</p><p style="margin-top:26px;color:#7b0d1b;font-weight:bold">${copy.team}</p></div></div></body></html>`;
+}
+
 function donationHtml(session, language) {
   const copy = EMAIL_COPY[language];
   const amount = new Intl.NumberFormat(EMAIL_LOCALES[language], { style: 'currency', currency: String(session.currency || 'eur').toUpperCase() }).format((session.amount_total || 0) / 100);
   return `<!doctype html><html lang="${language}"><body style="margin:0;background:#f8efe6;font-family:Arial,sans-serif;color:#3d1a1f"><div style="max-width:600px;margin:30px auto;background:#fffaf3;border:1px solid #ead6b6;border-radius:20px;overflow:hidden"><img src="https://www.noelwish.com/api/solidarity-gifts-image" width="600" alt="" style="display:block;width:100%;height:auto"><div style="padding:34px"><p style="color:#a86e2a;letter-spacing:2px;font-size:12px">${copy.donationLabel}</p><h1 style="font-family:Georgia,serif;color:#7b0d1b;font-size:34px;line-height:1.15">${copy.donationTitle}</h1><p style="font-size:17px;line-height:1.7">${copy.donationConfirmed(amount)}</p><div style="background:#fff0cc;border-left:4px solid #cf9c34;padding:15px 18px;margin:22px 0;border-radius:8px;line-height:1.65">${copy.donationHelp}</div><p style="font-size:13px;color:#765;line-height:1.6">${copy.donationReceipt}</p><p style="margin-top:26px;font-family:Georgia,serif;color:#8d1523;font-size:20px">${copy.team}</p></div></div></body></html>`;
 }
 
-async function sendEmail({ to, subject, html, text, eventId, scheduledAt, language = 'fr' }) {
+async function sendEmail({ to, subject, html, text, eventId, idempotencySuffix = 'primary', scheduledAt, language = 'fr' }) {
   const payload = {
     from: `${EMAIL_COPY[emailLanguage(language)].santa} <magic@noelwish.com>`,
     to: [to],
@@ -285,7 +298,7 @@ async function sendEmail({ to, subject, html, text, eventId, scheduledAt, langua
     headers: {
       Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       'Content-Type': 'application/json',
-      'Idempotency-Key': `noelwish-${eventId}`
+      'Idempotency-Key': `noelwish-${eventId}-${idempotencySuffix}`
     },
     body: JSON.stringify(payload)
   });
@@ -335,7 +348,7 @@ export default async function handler(req, res) {
   const copy = EMAIL_COPY[language];
   const product = metadata.noelwish_product;
   const recipientEmail = metadata.delivery_email;
-  const purchaserEmail = session.customer_details?.email || recipientEmail;
+  const purchaserEmail = metadata.sender_email || session.customer_details?.email || recipientEmail;
 
   if (contactsConfigured() && validEmail(purchaserEmail)) {
     const shipping = session.collected_information?.shipping_details || session.shipping_details || {};
@@ -376,9 +389,20 @@ export default async function handler(req, res) {
         html: letterHtml(metadata, language),
         text: letterText(metadata, language),
         eventId: event.id,
+        idempotencySuffix: 'recipient-letter',
         scheduledAt: metadata.delivery_mode === 'scheduled' ? futureDeliveryDate(metadata.delivery_at) : undefined,
         language
       });
+      if (purchaserEmail) {
+        await sendEmail({
+          to: purchaserEmail,
+          subject: copy.confirmationSubject,
+          html: letterConfirmationHtml(metadata, language),
+          eventId: event.id,
+          idempotencySuffix: 'purchaser-confirmation',
+          language
+        });
+      }
     } else if (purchaserEmail && ['santa-surprise', 'big-christmas-box'].includes(product)) {
       await sendEmail({
         to: purchaserEmail,
