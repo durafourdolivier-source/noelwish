@@ -244,7 +244,12 @@ function render(key, lang) {
         shippingDetails:{
           '@type':'OfferShippingDetails',
           shippingDestination:{'@type':'DefinedRegion',addressCountry:marketCountry},
-          shippingRate:{'@type':'MonetaryAmount',value:isDigital?'0.00':'9.00',currency:'EUR'}
+          shippingRate:{'@type':'MonetaryAmount',value:isDigital?'0.00':'9.00',currency:'EUR'},
+          deliveryTime:{
+            '@type':'ShippingDeliveryTime',
+            handlingTime:{'@type':'QuantitativeValue',minValue:0,maxValue:isDigital?0:7,unitCode:'DAY'},
+            transitTime:{'@type':'QuantitativeValue',minValue:isDigital?0:3,maxValue:isDigital?0:7,unitCode:'DAY'}
+          }
         },
         hasMerchantReturnPolicy:{
           '@type':'MerchantReturnPolicy',
