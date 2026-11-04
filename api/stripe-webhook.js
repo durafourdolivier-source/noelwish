@@ -326,6 +326,33 @@ async function upsertContact(input) {
   if (!response.ok) throw new Error('Contact storage failed');
 }
 
+async function recordPurchaseEvent(session, metadata, eventId) {
+  if (!contactsConfigured()) return;
+  const url = String(process.env.SUPABASE_URL || '').replace(/\/$/, '');
+  const key = String(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+  const record = {
+    event_id: `stripe:${eventId}`,
+    event_name: 'purchase_completed',
+    occurred_at: new Date((session.created || Math.floor(Date.now() / 1000)) * 1000).toISOString(),
+    visitor_id: null,
+    session_id: null,
+    flow_id: String(metadata.analytics_flow_id || '').slice(0, 160) || null,
+    language: emailLanguage(metadata.language),
+    market: String(metadata.market || '').slice(0, 8) || null,
+    currency: String(session.currency || '').slice(0, 8) || null,
+    product_id: String(metadata.noelwish_product || '').slice(0, 80) || null,
+    amount_minor: Math.max(0, Number(session.amount_total || 0)),
+    stripe_session_id: String(session.id || '').slice(0, 180) || null,
+    metadata: {payment_status: session.payment_status}
+  };
+  const response = await fetch(url + '/rest/v1/noelwish_funnel_events?on_conflict=event_id', {
+    method:'POST',
+    headers:{apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json',Prefer:'resolution=ignore-duplicates,return=minimal'},
+    body:JSON.stringify(record)
+  });
+  if (!response.ok) throw new Error('Purchase analytics storage failed');
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   if (!process.env.STRIPE_WEBHOOK_SECRET || !process.env.RESEND_API_KEY) {
@@ -349,6 +376,12 @@ export default async function handler(req, res) {
   const product = metadata.noelwish_product;
   const recipientEmail = metadata.delivery_email;
   const purchaserEmail = metadata.sender_email || session.customer_details?.email || recipientEmail;
+
+  try {
+    await recordPurchaseEvent(session, metadata, event.id);
+  } catch (error) {
+    console.error(JSON.stringify({level:'error',route:'/api/stripe-webhook',action:'save_purchase_event',message:error.message}));
+  }
 
   if (contactsConfigured() && validEmail(purchaserEmail)) {
     const shipping = session.collected_information?.shipping_details || session.shipping_details || {};

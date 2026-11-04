@@ -31,6 +31,16 @@
   const sessionId = storedId(sessionStorage, 'noelwish_session_id', 'nws');
   const sessionStartedAt = Date.now();
   let sequence = 0;
+  let persistTimer;
+  const persistQueue = [];
+  const persistedEvents = new Set([
+    'page_view_enhanced', 'section_view', 'view_item_list',
+    'personalization_started', 'personalization_step_viewed',
+    'personalization_step_completed', 'personalization_completed',
+    'personalization_abandoned', 'checkout_requested', 'begin_checkout',
+    'checkout_created', 'checkout_cancelled', 'checkout_error',
+    'engaged_time', 'session_end'
+  ]);
 
   function cleanValue(value) {
     if (value === undefined || value === null || value === '') return undefined;
@@ -104,6 +114,63 @@
     });
   }
 
+  function flushPersistedEvents(useBeacon = false) {
+    clearTimeout(persistTimer);
+    persistTimer = undefined;
+    if (!persistQueue.length) return;
+    const events = persistQueue.splice(0, 20);
+    const body = JSON.stringify({events});
+    try {
+      if (useBeacon && navigator.sendBeacon) {
+        navigator.sendBeacon('/api/track-event', new Blob([body], {type:'application/json'}));
+      } else {
+        fetch('/api/track-event', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body,
+          keepalive: true,
+          credentials: 'omit'
+        }).catch(() => {});
+      }
+    } catch {}
+    if (persistQueue.length && !useBeacon) persistTimer = setTimeout(flushPersistedEvents, 1000);
+  }
+
+  function persist(eventName, payload) {
+    if (!persistedEvents.has(eventName) || pageType() === 'admin') return;
+    persistQueue.push({
+      event_id: `${sessionId}:${payload.event_sequence}`,
+      event_name: eventName,
+      occurred_at: new Date().toISOString(),
+      visitor_id: visitorId,
+      session_id: sessionId,
+      flow_id: payload.flow_id,
+      page_path: payload.page_path,
+      page_hash: payload.page_hash,
+      referrer_host: payload.referrer_host,
+      language: payload.page_language || payload.language,
+      market: payload.market,
+      currency: payload.currency,
+      device_type: payload.device_type,
+      product_id: payload.product,
+      stage: payload.stage,
+      stage_sequence: payload.stage_sequence,
+      duration_seconds: payload.duration_seconds || payload.seconds,
+      metadata: sanitize({
+        landing_path: payload.landing_path,
+        delivery_mode: payload.delivery_mode,
+        step: payload.step,
+        last_step: payload.last_step,
+        returning_visitor: payload.returning_visitor,
+        source: payload.source,
+        medium: payload.medium,
+        campaign: payload.campaign
+      })
+    });
+    if (persistQueue.length >= 10) flushPersistedEvents();
+    else if (!persistTimer) persistTimer = setTimeout(flushPersistedEvents, 1500);
+  }
+
   function track(name, properties = {}) {
     const eventName = String(name || 'unknown_event').replace(/[^a-zA-Z0-9_]/g, '_').slice(0, 40);
     const payload = {...context(), ...sanitize(properties)};
@@ -118,6 +185,7 @@
     try {
       window.dispatchEvent(new CustomEvent('noelwish:analytics', {detail: {event: eventName, properties: payload}}));
     } catch {}
+    persist(eventName, payload);
   }
 
   window.noelwishTrack = track;
@@ -187,8 +255,11 @@
     message: event.reason?.message || String(event.reason || 'unknown')
   }));
 
-  addEventListener('pagehide', () => track('session_end', {
-    duration_seconds: Math.round((Date.now() - sessionStartedAt) / 1000),
-    max_scroll: reached.size ? Math.max(...reached) : 0
-  }));
+  addEventListener('pagehide', () => {
+    track('session_end', {
+      duration_seconds: Math.round((Date.now() - sessionStartedAt) / 1000),
+      max_scroll: reached.size ? Math.max(...reached) : 0
+    });
+    flushPersistedEvents(true);
+  });
 })();
