@@ -120,8 +120,7 @@ async function saveLead(body) {
   const email = String(body.email || '').trim().toLowerCase();
   if (!validEmail(email)) throw new Error('Invalid email');
   const clean = (value, max = 160) => String(value || '').trim().slice(0, max) || null;
-  const marketingConsent = body.marketingConsent === true;
-  const record = {email,recipient_name:clean(body.recipientName),sender_name:clean(body.senderName),product_id:clean(body.productId,80),lifecycle:'lead',funnel_stage:clean(body.funnelStage,80)||'email_captured',language:clean(body.language,8),market:clean(body.market,8),currency:clean(body.currency,8),source:clean(body.source,80)||'gift_personalization',flow_id:clean(body.flowId,120),last_seen_at:new Date().toISOString(),metadata:{delivery_mode:clean(body.deliveryMode,40),recipient_email:clean(body.recipientEmail,254),marketing_consent:marketingConsent,marketing_consent_at:marketingConsent?new Date().toISOString():null,lead_magnet:clean(body.leadMagnet,80)}};
+  const record = {email,recipient_name:clean(body.recipientName),sender_name:clean(body.senderName),product_id:clean(body.productId,80),lifecycle:'lead',funnel_stage:clean(body.funnelStage,80)||'email_captured',language:clean(body.language,8),market:clean(body.market,8),currency:clean(body.currency,8),source:clean(body.source,80)||'gift_personalization',flow_id:clean(body.flowId,120),last_seen_at:new Date().toISOString(),metadata:{delivery_mode:clean(body.deliveryMode,40),recipient_email:clean(body.recipientEmail,254),lead_magnet:clean(body.leadMagnet,80)}};
   Object.keys(record).forEach(name=>record[name]===null&&delete record[name]);
   const response = await fetch(url + '/rest/v1/noelwish_contacts?on_conflict=email_normalized', {method:'POST',headers:{apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(record)});
   if (!response.ok) throw new Error('Contact storage failed');
