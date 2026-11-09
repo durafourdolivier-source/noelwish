@@ -10,6 +10,14 @@
         ['🎁 Cadeau de Noël personnalisé', '/fr/cadeau-noel-personnalise'],
         ['✨ Idées cadeaux de Noël', '/fr/idees-cadeaux-noel-personnalises'],
         ['⭐ Mur des vœux de Noël', '/fr/mur-des-voeux']
+      ],
+      resourcesHeading: 'Conseils et inspirations de Noël',
+      resources: [
+        ['Exemples de lettres du Père Noël', '/fr/exemples-lettre-pere-noel-enfant'],
+        ['Lettre au Père Noël gratuite à imprimer', '/fr/lettre-pere-noel-gratuite-a-imprimer'],
+        ['Encourager un enfant avec bienveillance', '/fr/lettre-pere-noel-enfant-pas-sage'],
+        ['Cadeau personnalisé pour maman', '/fr/cadeau-noel-personnalise-maman'],
+        ['Cadeau personnalisé pour un couple', '/fr/cadeau-noel-personnalise-couple']
       ]
     },
     en: {
@@ -22,6 +30,14 @@
         ['🎁 Personalised Christmas gift', '/en/personalized-christmas-gift'],
         ['✨ Christmas gift ideas', '/en/personalized-christmas-gift-ideas'],
         ['⭐ Christmas Wish Wall', '/en/christmas-wish-wall']
+      ],
+      resourcesHeading: 'Christmas advice and inspiration',
+      resources: [
+        ['Santa letter examples for children', '/en/santa-letter-examples-for-children'],
+        ['Free printable Letter to Santa', '/en/free-printable-letter-to-santa'],
+        ['A kind Santa letter after a difficult year', '/en/santa-letter-for-child-not-always-good'],
+        ['Personalized Christmas gift for Mom', '/en/personalized-christmas-gift-for-mom'],
+        ['Personalized Christmas gift for couples', '/en/personalized-christmas-gift-for-couples']
       ]
     },
     es: {
@@ -89,7 +105,10 @@
       section.style.cssText = 'max-width:1000px;margin:56px auto 18px;padding:38px 24px;border:1px solid rgba(232,185,91,.25);border-radius:24px;background:rgba(255,255,255,.035)';
       document.querySelector('#home')?.appendChild(section);
     }
-    section.innerHTML = `<h2>${content.heading}</h2><p class="lead" style="margin:0 auto 26px">${content.copy}</p><div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">${content.links.map(([label, href]) => `<a class="btn secondary" href="${href}">${label}</a>`).join('')}</div>`;
+    const resources = content.resources?.length
+      ? `<div style="margin-top:34px;padding-top:28px;border-top:1px solid rgba(246,211,123,.22)"><h3 style="font-family:'Playfair Display',serif;font-size:25px;margin:0 0 18px">${content.resourcesHeading}</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;text-align:left">${content.resources.map(([label, href]) => `<a href="${href}" style="padding:15px 17px;border:1px solid rgba(246,211,123,.28);border-radius:16px;background:rgba(255,255,255,.035);line-height:1.4">✨ ${label}</a>`).join('')}</div></div>`
+      : '';
+    section.innerHTML = `<h2>${content.heading}</h2><p class="lead" style="margin:0 auto 26px">${content.copy}</p><div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">${content.links.map(([label, href]) => `<a class="btn secondary" href="${href}">${label}</a>`).join('')}</div>${resources}`;
   }
 
   function update() {
