@@ -65,6 +65,18 @@ async function contactsRequest() {
   return { contacts: await response.json(), configured: true };
 }
 
+async function funnelAnalyticsRequest() {
+  const url = String(process.env.SUPABASE_URL || '').replace(/\/$/, '');
+  const key = String(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+  if (!url || !key) return { events: [], configured: false };
+  const since = new Date(Date.now() - 30 * 86400000).toISOString();
+  const names = '(free_letter_view,free_letter_email_captured,free_letter_pdf_downloaded,free_letter_upsell_clicked,free_letter_paid_flow_started,purchase_completed)';
+  const params = new URLSearchParams({select:'event_name,occurred_at,visitor_id,session_id,flow_id,language,product_id,page_path,metadata',event_name:`in.${names}`,occurred_at:`gte.${since}`,order:'occurred_at.desc',limit:'5000'});
+  const response = await fetch(url + '/rest/v1/noelwish_funnel_events?' + params, {headers:{apikey:key,Authorization:'Bearer '+key}});
+  if (!response.ok) throw new Error('Impossible de charger le tunnel de conversion');
+  return { events: await response.json(), configured: true };
+}
+
 
 const SHIPPING_COPY = {
   fr: {
@@ -224,7 +236,7 @@ module.exports = async function handler(req, res) {
     if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
     const params = new URLSearchParams({ limit: '100', status: 'complete' });
-    const [payload, contactData] = await Promise.all([stripeRequest(`/checkout/sessions?${params}`), contactsRequest()]);
+    const [payload, contactData, funnelData] = await Promise.all([stripeRequest(`/checkout/sessions?${params}`), contactsRequest(), funnelAnalyticsRequest()]);
     const orders = (payload.data || []).map(session => {
       const metadata = session.metadata || {};
       const productId = metadata.noelwish_product || '';
@@ -261,7 +273,7 @@ module.exports = async function handler(req, res) {
         livemode: Boolean(session.livemode)
       };
     });
-    return res.status(200).json({ orders, contacts: contactData.contacts, contactsConfigured: contactData.configured, hasMore: Boolean(payload.has_more) });
+    return res.status(200).json({ orders, contacts: contactData.contacts, contactsConfigured: contactData.configured, funnelEvents: funnelData.events, funnelConfigured: funnelData.configured, hasMore: Boolean(payload.has_more) });
   } catch (error) {
     console.error(JSON.stringify({ level: 'error', route: '/api/admin-orders', message: error.message }));
     return res.status(502).json({ error: error.message || 'Impossible de gérer les commandes' });

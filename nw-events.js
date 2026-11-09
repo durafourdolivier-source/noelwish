@@ -39,6 +39,9 @@
     'personalization_step_completed', 'personalization_completed',
     'personalization_abandoned', 'checkout_requested', 'begin_checkout',
     'checkout_created', 'checkout_cancelled', 'checkout_error',
+    'free_letter_view', 'free_letter_email_captured',
+    'free_letter_pdf_downloaded', 'free_letter_upsell_clicked',
+    'free_letter_paid_flow_started',
     'engaged_time', 'session_end'
   ]);
 

@@ -343,7 +343,7 @@ async function recordPurchaseEvent(session, metadata, eventId) {
     product_id: String(metadata.noelwish_product || '').slice(0, 80) || null,
     amount_minor: Math.max(0, Number(session.amount_total || 0)),
     stripe_session_id: String(session.id || '').slice(0, 180) || null,
-    metadata: {payment_status: session.payment_status}
+    metadata: {payment_status: session.payment_status, acquisition_source: String(metadata.acquisition_source || '').slice(0, 80) || null}
   };
   const response = await fetch(url + '/rest/v1/noelwish_funnel_events?on_conflict=event_id', {
     method:'POST',

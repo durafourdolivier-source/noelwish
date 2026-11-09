@@ -168,6 +168,8 @@ module.exports = async function handler(req, res) {
   params.set('metadata[currency]', currency);
   params.set('metadata[language]', language);
   const details = req.body?.personalization || {};
+  if (details.analyticsFlowId) params.set('metadata[analytics_flow_id]', String(details.analyticsFlowId).slice(0, 160));
+  if (details.acquisitionSource) params.set('metadata[acquisition_source]', String(details.acquisitionSource).slice(0, 80));
   if (validEmail(details.senderEmail)) params.set('customer_email', String(details.senderEmail).trim().toLowerCase());
   const metadata = {
     recipient: details.name,
