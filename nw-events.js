@@ -1,6 +1,33 @@
 (() => {
   if (window.__NOELWISH_EVENTS_LOADED__) return;
   window.__NOELWISH_EVENTS_LOADED__ = true;
+  // Explicit browser opt-out: never infer internal traffic from country or IP.
+  let internalTraffic = false;
+  try {
+    const params = new URLSearchParams(location.search);
+    const choice = params.get('nw_internal');
+    if (choice === '1') localStorage.setItem('noelwish_internal', '1');
+    if (choice === '0') localStorage.removeItem('noelwish_internal');
+    internalTraffic = localStorage.getItem('noelwish_internal') === '1' ||
+      localStorage.getItem('noelwish_visitor_id') === 'nwv_735d488b-1778-4821-9a32-5c0d8b9b6d15';
+    if (choice === '1' || choice === '0') {
+      params.delete('nw_internal');
+      history.replaceState(null, '', location.pathname + (params.size ? '?' + params : '') + location.hash);
+      window.addEventListener('DOMContentLoaded', () => {
+        const notice = document.createElement('div');
+        notice.textContent = internalTraffic ? 'NoelWish : visites internes exclues sur ce navigateur.' : 'NoelWish : suivi réactivé sur ce navigateur.';
+        notice.style.cssText = 'position:fixed;bottom:12px;left:12px;right:12px;z-index:2147483647;padding:16px;background:#163b2c;color:white;border-radius:12px;text-align:center;font:16px sans-serif';
+        document.body.appendChild(notice);
+        setTimeout(() => notice.remove(), 12000);
+      });
+    }
+  } catch {}
+  if (internalTraffic) {
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    window.va('beforeSend', () => null);
+    window.noelwishTrack = () => {};
+    return;
+  }
   const MAX_TEXT = 80;
   const emailPattern = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
   const secretPattern = /\b(?:cs_|sk_|pk_|whsec_)[A-Za-z0-9_-]+\b/g;
