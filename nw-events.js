@@ -57,6 +57,8 @@
   const visitorId = storedId(localStorage, 'noelwish_visitor_id', 'nwv');
   const sessionId = storedId(sessionStorage, 'noelwish_session_id', 'nws');
   const sessionStartedAt = Date.now();
+  // A fresh namespace per document prevents collisions across navigation/reload.
+  const pageInstanceId = randomId('nwp');
   let sequence = 0;
   let persistTimer;
   const persistQueue = [];
@@ -169,7 +171,7 @@
   function persist(eventName, payload) {
     if (!persistedEvents.has(eventName) || pageType() === 'admin') return;
     persistQueue.push({
-      event_id: `${sessionId}:${payload.event_sequence}`,
+      event_id: `${pageInstanceId}:${payload.event_sequence}`,
       event_name: eventName,
       occurred_at: new Date().toISOString(),
       visitor_id: visitorId,
