@@ -189,6 +189,7 @@
       stage_sequence: payload.stage_sequence,
       duration_seconds: payload.duration_seconds || payload.seconds,
       metadata: sanitize({
+        automation_webdriver: navigator.webdriver === true,
         landing_path: payload.landing_path,
         delivery_mode: payload.delivery_mode,
         step: payload.step,

@@ -1,3 +1,4 @@
+const trafficDiagnostic = require('../traffic-diagnostic');
 const ALLOWED_EVENTS = new Set([
   'page_view_enhanced', 'section_view', 'view_item_list',
   'personalization_started', 'personalization_step_viewed',
@@ -61,7 +62,16 @@ module.exports = async function handler(req, res) {
   const key = String(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '');
   if (!url || !key) return res.status(503).json({error:'Analytics storage unavailable'});
   const source = Array.isArray(req.body?.events) ? req.body.events.slice(0, 20) : [];
-  const events = source.map(cleanEvent).filter(Boolean);
+  const events = source.map(input => {
+    const event = cleanEvent(input);
+    if (!event) return null;
+    // Override reserved diagnostic fields: never trust a client classification.
+    for (const key of Object.keys(event.metadata)) {
+      if (/^(traffic_|request_|diagnostic_)/.test(key)) delete event.metadata[key];
+    }
+    event.metadata = {...event.metadata, ...trafficDiagnostic(req, input)};
+    return event;
+  }).filter(Boolean);
   if (!events.length) return res.status(202).json({accepted:0});
   const response = await fetch(url + '/rest/v1/noelwish_funnel_events?on_conflict=event_id', {
     method: 'POST',
